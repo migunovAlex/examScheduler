@@ -20,7 +20,7 @@ public class GetPageControllerTest {
 	
 	@Test
 	public void shouldGetPage(){
-		assertEquals(controller.getMainPage(), "loginPage");
+		assertEquals(controller.getLoginPage(), "loginPage");
 	}
 	
 	

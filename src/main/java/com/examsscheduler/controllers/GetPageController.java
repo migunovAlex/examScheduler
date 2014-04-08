@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class GetPageController {
 	
 	@RequestMapping(value="/loginPage", method=RequestMethod.GET)
-	public String getMainPage(){
+	public String getLoginPage(){
 		return "loginPage";
 	}
 	
