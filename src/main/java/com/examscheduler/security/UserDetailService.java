@@ -47,7 +47,7 @@ public class UserDetailService implements UserDetailsService{
 		List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();
 		
 		authList.add(new GrantedAuthorityImpl("ROLE_USER"));
-		if(access.equals(0)) authList.add(new GrantedAuthorityImpl("ROLE_ADMIN"));
+		if(access.equals(2)) authList.add(new GrantedAuthorityImpl("ROLE_MANAGER"));
 		if(access.equals(1)) authList.add(new GrantedAuthorityImpl("ROLE_ADMIN"));
 		
 		return authList;
