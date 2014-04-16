@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.examscheduler.security.persistence.UserDao;
 import com.examscheduler.security.persistence.entity.DbUser;
 
+@SuppressWarnings("deprecation")
 public class UserDetailService implements UserDetailsService{
 	
 	@Autowired
@@ -26,11 +26,7 @@ public class UserDetailService implements UserDetailsService{
 
 		UserDetails user =null;
 		DbUser dbUser = null;
-		try{
-			dbUser = userDao.searchDatabase(username);
-		}catch(HibernateException he){
-			he.printStackTrace();
-		}
+		dbUser = userDao.searchDatabase(username);
 		
 		user = new User(dbUser.getUsername(),
 				dbUser.getPassword().toLowerCase(),

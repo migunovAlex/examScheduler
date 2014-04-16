@@ -8,12 +8,6 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
-
-
-
-
 import com.examscheduler.security.persistence.entity.DbUser;
 
 @Transactional
@@ -28,7 +22,8 @@ public class UserDAOImpl implements UserDao {
 
 	@SuppressWarnings("unchecked")
 	public DbUser searchDatabase(String username) {
-		List<DbUser> users = currentSession().createCriteria(DbUser.class).add(Restrictions.eq("username", username)).list();
+		List<DbUser> users=null;
+		users = currentSession().createCriteria(DbUser.class).add(Restrictions.eq("username", username)).list();
 		if(users.size()==0) return null;
 		return users.get(0);
 	}
