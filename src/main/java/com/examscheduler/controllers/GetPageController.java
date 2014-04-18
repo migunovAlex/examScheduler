@@ -1,4 +1,4 @@
-package com.examsscheduler.controllers;
+package com.examscheduler.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

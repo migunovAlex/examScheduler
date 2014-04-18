@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import com.examsscheduler.controllers.GetPageController;
+import com.examscheduler.controllers.GetPageController;
 
 public class GetPageControllerTest {
 	

@@ -32,6 +32,7 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>com.examscheduler.security.persistence.entity.DbUser</value>
+				<value></value>
 			</list>
 		</property>
 	</bean>
