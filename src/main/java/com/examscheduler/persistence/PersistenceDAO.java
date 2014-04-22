@@ -1,4 +1,4 @@
-package com.examsscheduler.persistence;
+package com.examscheduler.persistence;
 
 import com.examscheduler.entity.Auditorie;
 import com.examscheduler.entity.LessonsTime;

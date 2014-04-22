@@ -1,4 +1,4 @@
-package com.examsscheduler.persistence;
+package com.examscheduler.persistence;
 
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.examscheduler.entity.Auditorie;
 import com.examscheduler.entity.LessonsTime;
-import com.examsscheduler.persistence.PersistenceDAO;
+import com.examscheduler.persistence.PersistenceDAO;
 
 @Transactional
 public class PersistenceImpl implements PersistenceDAO {

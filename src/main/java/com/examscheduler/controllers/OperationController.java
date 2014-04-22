@@ -1,5 +1,7 @@
 package com.examscheduler.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,23 +11,48 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.entity.LessonsTime;
+import com.examscheduler.persistence.PersistenceDAO;
 import com.examscheduler.service.SchedulerDataService;
 
 @Controller
-@RequestMapping("/service/secured/classtime")
+@RequestMapping("/service/secured")
 public class OperationController {
 	
 	@Autowired
-	private SchedulerDataService serviceLayer;
+	private SchedulerDataService serviceDataScheduler;
+	//private PersistenceDAO persistence;
 	
-	@RequestMapping(value="/getauditories", method=RequestMethod.POST)
-	public String getAuditories(@RequestParam(value="audId") Integer audId, ModelMap model){
-		return "";
-	}
-	
-	@RequestMapping(value="/new", method=RequestMethod.POST)
-	public String getLessonsTime(@RequestParam(value="startTime") Integer startTime, @RequestParam(value="endTime") Integer endTime, ModelMap model){
-		return "";
-	}
+	@RequestMapping(value="/classtime/new", method=RequestMethod.POST)
+	//public @ResponseBody LessonTimeDTO getLessonsTime(@RequestBody LessonTimeDTO lessonTime){
+	//@ResponseBody
+	public @ResponseBody LessonTimeDTO getLessonsTime(@RequestBody LessonTimeDTO lessonTime){
+		LessonTimeDTO lessonTimeResult = new LessonTimeDTO();
 		
+		if(lessonTime!=null){
+			System.out.println("Recieved params - " + lessonTime);
+		}else{
+			System.out.println("ERROR");
+		}
+		
+/*		LessonsTime lessonTime = new LessonsTime();
+		
+		public @ResponseBody LessonTimeDTO getLessonsTime(@RequestBody (value="lessonNum", required = false) Integer lessonNum,@RequestParam(value="startTime", required = false) Integer startTime, @RequestParam(value="endTime", required = false) Integer endTime, ModelMap model){
+		
+		lessonTimeResult.setLessonNumber(lessonNum);
+		lessonTimeResult.setTimeStart(startTime);
+		lessonTimeResult.setTimeEnd(endTime);
+		lessonTime.setLessonNumber(lessonTimeResult.getLessonNumber());
+		lessonTime.setTimeStart(Long.parseLong("5454654646464"));
+		lessonTime.setTimeEnd(Long.parseLong("5454654646464"));
+		persistence.createLessonsTime(lessonTime); */
+		
+		
+		return lessonTimeResult;
+	}
+/*	
+	public LessonTimeDTO getLessonTime(@RequestBody LessonTimeDTO lessonTime){
+		return new LessonTimeDTO();
+	}*/
 }

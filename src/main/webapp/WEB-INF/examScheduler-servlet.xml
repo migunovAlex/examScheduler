@@ -16,19 +16,21 @@
 
 	<context:annotation-config />
 	
-	<context:component-scan base-package="com.examsscheduler"/>
+	<context:component-scan base-package="com.examscheduler"/>
 	
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
-		
+	
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
     	<property name="prefix" value="/WEB-INF/view/"/>
     	<property name="suffix" value=".jsp"/>
     </bean>
     
+    <bean id="operationService" class="com.examscheduler.service.SchedulerDataServiceImpl"/>
+    
+    <bean id="persistenceDAO" class="com.examscheduler.persistence.PersistenceImpl"/>
+    
     <import resource="persistence-setup.xml"/>
-    	  
-    <bean id="persistenceDAO" class="com.schedule.persistence.PersistenceImpl" />
-    <bean id="serviceLayer" class="com.schedule.service.SchedulerDataServiceImpl" />
+   
 </beans>    
