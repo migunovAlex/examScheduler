@@ -2,33 +2,26 @@ package com.examscheduler.dto;
 
 public class LessonTimeDTO {
 
-	private int id;
-	private int lessonNumber;
-	private int timeStart;
-	private int timeEnd;
+	private Long lessonNumber;
+	private Long timeStart;
+	private Long timeEnd;
 	
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public int getLessonNumber() {
+	public Long getLessonNumber() {
 		return lessonNumber;
 	}
-	public void setLessonNumber(int lessonNumber) {
+	public void setLessonNumber(Long lessonNumber) {
 		this.lessonNumber = lessonNumber;
 	}
-	public int getTimeStart() {
+	public Long getTimeStart() {
 		return timeStart;
 	}
-	public void setTimeStart(int timeStart) {
+	public void setTimeStart(Long timeStart) {
 		this.timeStart = timeStart;
 	}
-	public int getTimeEnd() {
+	public Long getTimeEnd() {
 		return timeEnd;
 	}
-	public void setTimeEnd(int timeEnd) {
+	public void setTimeEnd(Long timeEnd) {
 		this.timeEnd = timeEnd;
 	}
 	

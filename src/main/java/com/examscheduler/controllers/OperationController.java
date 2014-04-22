@@ -1,27 +1,21 @@
 package com.examscheduler.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.examscheduler.dto.LessonTimeDTO;
-import com.examscheduler.entity.LessonsTime;
-import com.examscheduler.persistence.PersistenceDAO;
 import com.examscheduler.service.SchedulerDataService;
 
 @Controller
 @RequestMapping("/service/secured")
 public class OperationController {
 	
-	@Autowired
-	private SchedulerDataService serviceDataScheduler;
+//	@Autowired
+//	private SchedulerDataService serviceDataScheduler;
 	//private PersistenceDAO persistence;
 	
 	@RequestMapping(value="/classtime/new", method=RequestMethod.POST)
@@ -29,6 +23,8 @@ public class OperationController {
 	//@ResponseBody
 	public @ResponseBody LessonTimeDTO getLessonsTime(@RequestBody LessonTimeDTO lessonTime){
 		LessonTimeDTO lessonTimeResult = new LessonTimeDTO();
+		
+		System.out.println("Service has been invoked");
 		
 		if(lessonTime!=null){
 			System.out.println("Recieved params - " + lessonTime);
