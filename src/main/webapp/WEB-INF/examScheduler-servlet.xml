@@ -14,7 +14,6 @@
 	http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	
-	<mvc:annotation-driven/>
 
 	<context:annotation-config />
 	
@@ -29,6 +28,7 @@
     	<property name="suffix" value=".jsp"/>
     </bean>
     
+    <bean id="sessionGenerator" class="com.examscheduler.security.tools.SessionGenerator"/>
     <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
     <bean id="sessionGenerator" class="com.examscheduler.security.tools.SessionGenerator"/>
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
