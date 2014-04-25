@@ -27,6 +27,8 @@
     	<property name="suffix" value=".jsp"/>
     </bean>
     
+    <bean id="sessionGenerator" class="com.examscheduler.security.tools.SessionGenerator"/>
+    
     <import resource="persistence-setup.xml"/>
    
 </beans>    
