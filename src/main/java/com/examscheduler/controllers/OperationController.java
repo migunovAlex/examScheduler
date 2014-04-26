@@ -1,5 +1,7 @@
 package com.examscheduler.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,41 +16,41 @@ import com.examscheduler.service.SchedulerDataService;
 @RequestMapping("/service/secured")
 public class OperationController {
 	
-//	@Autowired
-//	private SchedulerDataService serviceDataScheduler;
-	//private PersistenceDAO persistence;
+	@Autowired
+	private SchedulerDataService serviceDataScheduler;
 	
-	@RequestMapping(value="/classtime/new", method=RequestMethod.POST)
-	//public @ResponseBody LessonTimeDTO getLessonsTime(@RequestBody LessonTimeDTO lessonTime){
-	//@ResponseBody
-	public @ResponseBody LessonTimeDTO getLessonsTime(@RequestBody LessonTimeDTO lessonTime){
-		LessonTimeDTO lessonTimeResult = new LessonTimeDTO();
-		
-		System.out.println("Service has been invoked");
-		
-		if(lessonTime!=null){
-			System.out.println("Recieved params - " + lessonTime);
-		}else{
-			System.out.println("ERROR");
-		}
-		
-/*		LessonsTime lessonTime = new LessonsTime();
-		
-		public @ResponseBody LessonTimeDTO getLessonsTime(@RequestBody (value="lessonNum", required = false) Integer lessonNum,@RequestParam(value="startTime", required = false) Integer startTime, @RequestParam(value="endTime", required = false) Integer endTime, ModelMap model){
-		
-		lessonTimeResult.setLessonNumber(lessonNum);
-		lessonTimeResult.setTimeStart(startTime);
-		lessonTimeResult.setTimeEnd(endTime);
-		lessonTime.setLessonNumber(lessonTimeResult.getLessonNumber());
-		lessonTime.setTimeStart(Long.parseLong("5454654646464"));
-		lessonTime.setTimeEnd(Long.parseLong("5454654646464"));
-		persistence.createLessonsTime(lessonTime); */
-		
-		
-		return lessonTimeResult;
+	public void setServiceDataScheduler(SchedulerDataService serviceDataScheduler) {
+		this.serviceDataScheduler = serviceDataScheduler;
 	}
-/*	
-	public LessonTimeDTO getLessonTime(@RequestBody LessonTimeDTO lessonTime){
-		return new LessonTimeDTO();
-	}*/
+
+	@RequestMapping(value="/classtime/new", method=RequestMethod.POST)
+	public @ResponseBody Boolean createLessonsTime(@RequestBody LessonTimeDTO lessonTime){
+		Boolean createResult = serviceDataScheduler.createLessonTime(lessonTime);
+		return createResult;
+	}
+	
+	@RequestMapping(value="/classtime/edit", method=RequestMethod.POST)
+	public @ResponseBody LessonTimeDTO updLessonsTime(@RequestBody LessonTimeDTO lessonTime){
+		LessonTimeDTO updLessonTime = serviceDataScheduler.updateLessonTime(lessonTime);		
+		return updLessonTime;
+	}
+	
+	@RequestMapping(value="/classtime/delete", method=RequestMethod.POST)
+	public @ResponseBody Boolean deleteLessonsTime(@RequestBody Integer lessonTimeId){
+		Boolean delLessonTime = serviceDataScheduler.deleteLessonTime(lessonTimeId);
+		return delLessonTime;
+	}
+	
+	@RequestMapping(value="/classtime/all", method=RequestMethod.POST)
+	public @ResponseBody List<LessonTimeDTO> getListLessonTime(){
+		List<LessonTimeDTO> listLessonTime = serviceDataScheduler.getListLessonTime();
+		return listLessonTime;
+	}
+	
+	@RequestMapping(value="/classtime/get", method=RequestMethod.POST)
+	public @ResponseBody LessonTimeDTO getLessonTime(@RequestBody Integer lessonTimeId){
+		LessonTimeDTO lessonTimeDTO = serviceDataScheduler.loadLessonTime(lessonTimeId);
+		return lessonTimeDTO;
+	}
+
 }

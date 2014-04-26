@@ -1,5 +1,7 @@
 package com.examscheduler.persistence;
 
+import java.util.List;
+
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -112,5 +114,15 @@ public class PersistenceImpl implements PersistenceDAO {
 		return lessonsTime;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<LessonsTime> getListLessonTime(){
+		List<LessonsTime> listLessonTime = null;
+		try{
+			listLessonTime = currentSession().createCriteria(LessonsTime.class).list();
+		}catch(HibernateException e){
+			e.printStackTrace();
+		}
+		return listLessonTime;
+	}
 	
 }

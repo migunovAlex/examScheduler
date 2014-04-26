@@ -1,8 +1,12 @@
 package com.examscheduler.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.entity.LessonsTime;
 import com.examscheduler.persistence.PersistenceDAO;
 
@@ -12,14 +16,63 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 	@Autowired
 	private PersistenceDAO persistenceDao;
 
-	public Boolean createLessonTime(Integer lessonNum, Integer startTime,
-			Integer endTime) {
+	public Boolean createLessonTime(LessonTimeDTO lessonTimeDTO) {
 		LessonsTime lessonTime = new LessonsTime();
-		lessonTime.setLessonNumber(lessonNum);
-		lessonTime.setTimeStart(startTime.longValue());
-		lessonTime.setTimeEnd(endTime.longValue());
+		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
+		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
+		lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
 		Boolean createLessonTime = persistenceDao.createLessonsTime(lessonTime);
 		return createLessonTime;
 	}
 
+	public LessonTimeDTO updateLessonTime(LessonTimeDTO lessonTimeDTO) {
+		
+		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeDTO.getId());
+		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
+		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
+		lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
+		Boolean updLessonTime = persistenceDao.updateLessonsTime(lessonTime);
+		if(updLessonTime){
+			LessonTimeDTO lessonTimeDTOUpd = new LessonTimeDTO();
+			lessonTimeDTOUpd.setId(lessonTime.getId());
+			lessonTimeDTOUpd.setLessonNumber(lessonTime.getLessonNumber());
+			lessonTimeDTOUpd.setTimeStart(lessonTime.getTimeStart());
+			lessonTimeDTOUpd.setTimeEnd(lessonTime.getTimeEnd());
+			return lessonTimeDTOUpd;
+		}
+		return null;
+	}
+
+	public Boolean deleteLessonTime(Integer lessonTimeId) {
+		
+		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
+		Boolean delLessonTime = persistenceDao.deleteLessonsTime(lessonTime);
+		return delLessonTime;
+	}
+
+	public List<LessonTimeDTO> getListLessonTime() {
+
+		List<LessonsTime> listLessonTime = persistenceDao.getListLessonTime();
+		List<LessonTimeDTO> listLessonTimeDTO = new ArrayList<LessonTimeDTO>();
+		for(int i=0; i<listLessonTime.size(); i++){
+			LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
+			lessonTimeDTO.setId(listLessonTime.get(i).getId());
+			lessonTimeDTO.setLessonNumber(listLessonTime.get(i).getLessonNumber());
+			lessonTimeDTO.setTimeStart(listLessonTime.get(i).getTimeStart());
+			lessonTimeDTO.setTimeEnd(listLessonTime.get(i).getTimeEnd());
+			listLessonTimeDTO.add(lessonTimeDTO);
+		}
+		return listLessonTimeDTO;
+	}
+
+	public LessonTimeDTO loadLessonTime(Integer lessonTimeId) {
+		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
+		LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
+		lessonTimeDTO.setId(lessonTime.getId());
+		lessonTimeDTO.setLessonNumber(lessonTime.getLessonNumber());
+		lessonTimeDTO.setTimeStart(lessonTime.getTimeStart());
+		lessonTimeDTO.setTimeEnd(lessonTime.getTimeEnd());
+		return lessonTimeDTO;
+	}
+	
 }

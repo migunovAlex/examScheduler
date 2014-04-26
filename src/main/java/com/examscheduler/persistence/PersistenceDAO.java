@@ -1,5 +1,7 @@
 package com.examscheduler.persistence;
 
+import java.util.List;
+
 import com.examscheduler.entity.Auditorie;
 import com.examscheduler.entity.LessonsTime;
 
@@ -21,5 +23,5 @@ public interface PersistenceDAO {
 	
 	public LessonsTime loadLessonsTime(Integer lessonsTimeId);
 	
-	
+	public List<LessonsTime> getListLessonTime();
 }
