@@ -25,7 +25,7 @@
 
 		<security:form-login login-page="/app/pages/login"
 			authentication-failure-url="/app/pages/login?login_error=1"
-			default-target-url="/app/pages/secured/adminMainPage" />
+			default-target-url="/app/pages/secured/mainpage" />
 
 		<security:logout invalidate-session="true"
 			logout-success-url="/app/pages/mainpage" logout-url="/app/pages/logout" />
