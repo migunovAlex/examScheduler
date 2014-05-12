@@ -1,4 +1,4 @@
-package com.examsscheduler.controllers;
+package com.examscheduler.controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -12,7 +12,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ui.ModelMap;
 
-import com.examsscheduler.controllers.GetPageController;
+import com.examscheduler.controllers.GetPageController;
 
 public class GetPageControllerTest {
 	
