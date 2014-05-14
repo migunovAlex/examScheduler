@@ -16,6 +16,10 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 	@Autowired
 	private PersistenceDAO persistenceDao;
 
+	public void setPersistenceDao(PersistenceDAO persistenceDao) {
+		this.persistenceDao = persistenceDao;
+	}
+
 	public Boolean createLessonTime(LessonTimeDTO lessonTimeDTO) {
 		LessonsTime lessonTime = new LessonsTime();
 		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
@@ -32,14 +36,11 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
 		lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
 		Boolean updLessonTime = persistenceDao.updateLessonsTime(lessonTime);
-		if(updLessonTime){
-			LessonTimeDTO lessonTimeDTOUpd = new LessonTimeDTO();
-			lessonTimeDTOUpd.setId(lessonTime.getId());
-			lessonTimeDTOUpd.setLessonNumber(lessonTime.getLessonNumber());
-			lessonTimeDTOUpd.setTimeStart(lessonTime.getTimeStart());
-			lessonTimeDTOUpd.setTimeEnd(lessonTime.getTimeEnd());
-			return lessonTimeDTOUpd;
+		
+		if(updLessonTime==true){
+			return lessonTimeDTO;
 		}
+		
 		return null;
 	}
 
@@ -67,12 +68,15 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 
 	public LessonTimeDTO loadLessonTime(Integer lessonTimeId) {
 		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
-		LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
-		lessonTimeDTO.setId(lessonTime.getId());
-		lessonTimeDTO.setLessonNumber(lessonTime.getLessonNumber());
-		lessonTimeDTO.setTimeStart(lessonTime.getTimeStart());
-		lessonTimeDTO.setTimeEnd(lessonTime.getTimeEnd());
-		return lessonTimeDTO;
+		if(lessonTime!=null){
+			LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
+			lessonTimeDTO.setId(lessonTime.getId());
+			lessonTimeDTO.setLessonNumber(lessonTime.getLessonNumber());
+			lessonTimeDTO.setTimeStart(lessonTime.getTimeStart());
+			lessonTimeDTO.setTimeEnd(lessonTime.getTimeEnd());
+			return lessonTimeDTO;
+		}
+		return null;
 	}
 	
 }
