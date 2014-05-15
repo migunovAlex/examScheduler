@@ -155,6 +155,7 @@
 					<instrumentation>
 						<ignores>
 							<ignore>com.examscheduler.security.persistence.entity.*</ignore>
+							<ignore>com.examscheduler.entity.*</ignore>
 						</ignores>
 					</instrumentation>
 				</configuration>
