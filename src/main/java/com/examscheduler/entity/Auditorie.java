@@ -14,7 +14,7 @@ public class Auditorie {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="ID")
-	public int audId;
+	public int id;
 	
 	@Column(name="AUDITORY_NUMBER")
 	public String audNumber;
@@ -22,11 +22,11 @@ public class Auditorie {
 	@Column(name="MAX_PERSONS")
 	public int maxPerson;
 	
-	public int getAudId() {
-		return audId;
+	public int getId() {
+		return id;
 	}
-	public void setAudId(int audId) {
-		this.audId = audId;
+	public void setId(int id) {
+		this.id = id;
 	}
 	public String getAudNumber() {
 		return audNumber;

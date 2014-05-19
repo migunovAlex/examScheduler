@@ -46,7 +46,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().delete(auditorie);
 		}catch(HibernateException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -73,11 +73,21 @@ public class PersistenceImpl implements PersistenceDAO {
 		return auditorie;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<Auditorie> getListAuditorie(){
+		List<Auditorie> listAuditorie = null;
+		try{
+			listAuditorie = currentSession().createCriteria(Auditorie.class).list();
+		}catch(HibernateException e){
+			e.printStackTrace();
+		}
+		return listAuditorie;
+	}
+	
 	public boolean createLessonsTime(LessonsTime lessonsTime){
 		try{
 			currentSession().save(lessonsTime);
 		}catch(HibernateException e){
-			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -87,7 +97,6 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().delete(lessonsTime);
 		}catch(HibernateException e){
-			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -97,7 +106,6 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().update(lessonsTime);
 		}catch(HibernateException e){
-			e.printStackTrace();
 			return false;
 		}
 		return true;

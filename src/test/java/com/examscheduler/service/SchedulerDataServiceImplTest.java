@@ -3,8 +3,6 @@ package com.examscheduler.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.attribute.standard.SheetCollate;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,7 +13,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
 
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.entity.LessonsTime;
@@ -24,8 +21,6 @@ import com.examscheduler.persistence.PersistenceDAO;
 public class SchedulerDataServiceImplTest {
 	
 	private SchedulerDataServiceImpl schedulerDataService;
-	private LessonsTime lessonsTime = new LessonsTime();
-	private LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
 	private static final Integer lessonId = 1;
 	
 	@Mock
