@@ -29,6 +29,8 @@
     </bean>
     
     <bean id="sessionGenerator" class="com.examscheduler.security.tools.SessionGenerator"/>
+    <bean id="sessionComponent" class="com.examscheduler.security.session.SessionComponent"/>
+    
     <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
         <property name="messageConverters">

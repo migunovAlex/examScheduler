@@ -27,7 +27,7 @@ public class UserDAOImpl implements UserDao {
 		if(users.size()==0) return null;
 		return users.get(0);
 	}
-
+	
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
@@ -35,5 +35,5 @@ public class UserDAOImpl implements UserDao {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-
+	
 }
