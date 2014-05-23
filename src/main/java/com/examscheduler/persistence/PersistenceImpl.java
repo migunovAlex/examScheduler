@@ -117,7 +117,7 @@ public class PersistenceImpl implements PersistenceDAO {
 			lessonsTime = (LessonsTime) currentSession().load(LessonsTime.class, lessonsTimeId);
 			Hibernate.initialize(lessonsTime);
 		}catch(HibernateException e){
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return lessonsTime;
 	}
@@ -128,7 +128,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			listLessonTime = currentSession().createCriteria(LessonsTime.class).list();
 		}catch(HibernateException e){
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return listLessonTime;
 	}

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.examscheduler.security.persistence.UserDao;
 import com.examscheduler.security.persistence.entity.DbUser;
+import com.examscheduler.security.session.SessionService;
 
 public class UserDetailServiceTest {
 	
@@ -27,6 +28,8 @@ public class UserDetailServiceTest {
 
 	@Mock
 	private UserDao userDao;
+	@Mock
+	private SessionService sessionService;
 	
 	private UserDetailService testInstance;
 	
@@ -35,6 +38,7 @@ public class UserDetailServiceTest {
 		MockitoAnnotations.initMocks(this);
 		testInstance = new UserDetailService();
 		testInstance.setUserDao(userDao);
+		testInstance.setSessionService(sessionService);
 	}
 	
 	@Test
