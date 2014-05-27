@@ -14,10 +14,11 @@
 	http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	
+	<mvc:annotation-driven/>
 
 	<context:annotation-config />
 	
-	<context:component-scan base-package="com.examscheduler"/>
+	<context:component-scan base-package="com.examscheduler.controllers"/>
 	
 	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
 	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
@@ -30,7 +31,7 @@
     
     <bean id="sessionGenerator" class="com.examscheduler.security.tools.SessionGenerator"/>
     <bean id="sessionComponent" class="com.examscheduler.security.session.SessionComponent"/>
-    <bean id="sessionService" class="com.examscheduler.security.persistence.entity.SessionServiceImpl"/>
+    <bean id="sessionService" class="com.examscheduler.security.service.SessionServiceImpl"/>
     
     <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>
     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">

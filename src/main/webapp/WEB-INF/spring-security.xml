@@ -43,7 +43,7 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 
-	<bean id="customUserDetailsService" class="com.examscheduler.security.UserDetailService">
+	<bean id="customUserDetailsService" class="com.examscheduler.security.service.UserDetailService">
 		<property name="userDao" ref="userDAO"/>
 	</bean>
 	

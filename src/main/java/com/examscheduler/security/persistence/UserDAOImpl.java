@@ -13,6 +13,7 @@ import com.examscheduler.security.persistence.entity.DbUser;
 @Transactional
 public class UserDAOImpl implements UserDao {
 	
+	private static final String USERNAME_FIELD_NAME = "username";
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -23,7 +24,7 @@ public class UserDAOImpl implements UserDao {
 	@SuppressWarnings("unchecked")
 	public DbUser searchDatabase(String username) {
 		List<DbUser> users=null;
-		users = currentSession().createCriteria(DbUser.class).add(Restrictions.eq("username", username)).list();
+		users = currentSession().createCriteria(DbUser.class).add(Restrictions.eq(USERNAME_FIELD_NAME, username)).list();
 		if(users.size()==0) return null;
 		return users.get(0);
 	}

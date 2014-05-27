@@ -1,16 +1,18 @@
-package com.examscheduler.security.persistence.entity;
+package com.examscheduler.security.service;
 
 import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.examscheduler.dto.ErrorData;
 import com.examscheduler.dto.SessionDTO;
 import com.examscheduler.exceptions.PersistentActionException;
 import com.examscheduler.security.persistence.SessionDAO;
+import com.examscheduler.security.persistence.entity.DbUser;
+import com.examscheduler.security.persistence.entity.UserSession;
 import com.examscheduler.security.session.SessionComponent;
-import com.examscheduler.security.session.SessionService;
 import com.examscheduler.summary.SessionSummary;
 
 @Transactional
@@ -38,7 +40,7 @@ public class SessionServiceImpl implements SessionService {
 		userSession.setLastActivity(Calendar.getInstance().getTimeInMillis());
 		int sessionId;
 		try {
-			sessionId = sessionDao.saveSession(userSession);
+			sessionId = getSessionDao().saveSession(userSession);
 			if(sessionId != 0){
 				SessionDTO sessionDtoResult = new SessionDTO();
 				sessionDtoResult.setSessionValue(userSession.getSessionValue());
@@ -59,14 +61,14 @@ public class SessionServiceImpl implements SessionService {
 		String generatedNewSession = null;
 		boolean generatedNotTheDublicate = false;
 		while(!generatedNotTheDublicate){
-			generatedNewSession = sessionComponent.generateNewSession();
+			generatedNewSession = getSessionComponent().generateNewSession();
 			generatedNotTheDublicate = checkGeneratedSession(generatedNewSession);
 		}
 		return generatedNewSession;
 	}
 
 	private boolean checkGeneratedSession(String generatedNewSession) {
-		UserSession userSessionByValue = sessionDao.getUserSessionByValue(generatedNewSession);
+		UserSession userSessionByValue = getSessionDao().getUserSessionByValue(generatedNewSession);
 		return userSessionByValue == null ? true : false;
 	}
 
@@ -78,6 +80,22 @@ public class SessionServiceImpl implements SessionService {
 	public SessionSummary getCurrentSession(SessionDTO session) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public SessionComponent getSessionComponent() {
+		return sessionComponent;
+	}
+
+	public void setSessionComponent(SessionComponent sessionComponent) {
+		this.sessionComponent = sessionComponent;
+	}
+
+	public SessionDAO getSessionDao() {
+		return sessionDao;
+	}
+
+	public void setSessionDao(SessionDAO sessionDao) {
+		this.sessionDao = sessionDao;
 	}
 
 }

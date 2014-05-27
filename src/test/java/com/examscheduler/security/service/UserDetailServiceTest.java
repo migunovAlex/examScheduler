@@ -1,4 +1,4 @@
-package com.examscheduler.security;
+package com.examscheduler.security.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.examscheduler.security.persistence.UserDao;
 import com.examscheduler.security.persistence.entity.DbUser;
-import com.examscheduler.security.session.SessionService;
 
 public class UserDetailServiceTest {
 	

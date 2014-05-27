@@ -2,6 +2,9 @@ package com.examscheduler.security.tools;
 
 import java.util.Random;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class SessionGenerator {
 	
 	static int sessionLength = 30;

@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Component;
 
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.entity.LessonsTime;
 import com.examscheduler.persistence.PersistenceDAO;
 
-@Transactional
+@Component
 public class SchedulerDataServiceImpl implements SchedulerDataService{
 	
 	@Autowired
 	private PersistenceDAO persistenceDao;
+
+	public PersistenceDAO getPersistenceDao() {
+		return persistenceDao;
+	}
 
 	public void setPersistenceDao(PersistenceDAO persistenceDao) {
 		this.persistenceDao = persistenceDao;

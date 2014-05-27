@@ -1,4 +1,4 @@
-package com.examscheduler.security.session;
+package com.examscheduler.security.service;
 
 import com.examscheduler.dto.SessionDTO;
 import com.examscheduler.security.persistence.entity.DbUser;
