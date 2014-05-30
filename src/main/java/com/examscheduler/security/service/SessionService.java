@@ -8,7 +8,7 @@ public interface SessionService {
 	
 	public SessionSummary getNewSession(DbUser user);
 	
-	public boolean updateSessionActivity(SessionDTO session);
+	public SessionSummary updateSessionActivity(SessionDTO session);
 	
 	public SessionSummary getCurrentSession(SessionDTO session);
 

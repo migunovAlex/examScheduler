@@ -18,6 +18,12 @@ public class ErrorData {
 	public static final int ERROR_WHILE_OPERATE_WITH_DB_CODE = 601;
 	public static final String ERROR_WHILE_OPERATE_WITH_DB_MESSAGE = "Error while operate with DB";
 	
+	public static final int EXPIRED_SESSION_CODE = 602;
+	public static final String EXPIRED_SESSION_MESSAGE = "The session has been expired";
+	
+	public static final int NO_SUCH_SESSION_CODE = 603;
+	public static final String NO_SUCH_SESSION_MESSAGE = "There is no such session";
+	
 	public int getNumberCode() {
 		return numberCode;
 	}

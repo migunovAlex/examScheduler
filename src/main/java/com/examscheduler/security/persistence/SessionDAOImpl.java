@@ -29,15 +29,16 @@ public class SessionDAOImpl implements SessionDAO {
 		return userSessionList.get(0);
 	}
 
-	public void updateUserSession(UserSession userSession) {
+	public boolean updateUserSession(UserSession userSession) {
+		return false;
 		// TODO Auto-generated method stub
 
 	}
 
-	public int saveSession(UserSession userSession) throws PersistentActionException {
-		Integer savedId = 0;
+	public Long saveSession(UserSession userSession) throws PersistentActionException {
+		Long savedId = 0L;
 		try{
-			savedId = (Integer) currentSession().save(userSession);
+			savedId = (Long) currentSession().save(userSession);
 		}catch (HibernateException ex){
 			throw new PersistentActionException("Exception while saving session to DB");
 		}

@@ -3,7 +3,6 @@ package com.examscheduler.security.service;
 import java.util.Calendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.examscheduler.dto.ErrorData;
@@ -24,10 +23,12 @@ public class SessionServiceImpl implements SessionService {
 	@Autowired
 	private SessionDAO sessionDao;
 
-	public SessionSummary getNewSession(DbUser user) throws IllegalArgumentException {
-		SessionSummary sessionCreateResult = new SessionSummary();
+	public SessionSummary getNewSession(DbUser user){
+		SessionSummary result = new SessionSummary();
 		if(user == null || user.getId() == 0){
-			throw new IllegalArgumentException("No persisted user to bind session");
+			result.getErrorData().setNumberCode(ErrorData.WRONG_PARAMETERS_IN_REQUEST_CODE);
+			 result.getErrorData().setDescription(ErrorData.WRONG_PARAMETERS_IN_REQUEST_MESSAGE);
+			 return result;
 		}
 		
 		UserSession userSession = new UserSession();
@@ -38,7 +39,7 @@ public class SessionServiceImpl implements SessionService {
 		userSession.setActive(true);
 		userSession.setUser(user);
 		userSession.setLastActivity(Calendar.getInstance().getTimeInMillis());
-		int sessionId;
+		Long sessionId;
 		try {
 			sessionId = getSessionDao().saveSession(userSession);
 			if(sessionId != 0){
@@ -46,15 +47,15 @@ public class SessionServiceImpl implements SessionService {
 				sessionDtoResult.setSessionValue(userSession.getSessionValue());
 				sessionDtoResult.setLastActivity(userSession.getLastActivity());
 				sessionDtoResult.setActive(userSession.isActive());
-				sessionCreateResult.setSession(sessionDtoResult);
+				result.setSession(sessionDtoResult);
 			}
 		} catch (PersistentActionException e) {
 			e.printStackTrace();
-			sessionCreateResult.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
-			sessionCreateResult.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
+			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
 		}
 		
-		return sessionCreateResult;
+		return result;
 	}
 
 	private String generateAndCheckNewSession() {
@@ -72,14 +73,58 @@ public class SessionServiceImpl implements SessionService {
 		return userSessionByValue == null ? true : false;
 	}
 
-	public boolean updateSessionActivity(SessionDTO session) {
-		// TODO Auto-generated method stub
-		return false;
+	public SessionSummary updateSessionActivity(SessionDTO session) {
+		SessionSummary result = new SessionSummary();
+		if(session.getSessionValue() == null){
+			result.getErrorData().setNumberCode(ErrorData.WRONG_PARAMETERS_IN_REQUEST_CODE);
+			 result.getErrorData().setDescription(ErrorData.WRONG_PARAMETERS_IN_REQUEST_MESSAGE);
+			 return result;
+		}
+		 UserSession foundSession = sessionDao.getUserSessionByValue(session.getSessionValue());
+		 if(foundSession==null){
+			 result.getErrorData().setNumberCode(ErrorData.NO_SUCH_SESSION_CODE);
+			 result.getErrorData().setDescription(ErrorData.NO_SUCH_SESSION_MESSAGE);
+			 return result;
+		 }
+		 if(!foundSession.isActive()){
+			 result.getErrorData().setNumberCode(ErrorData.EXPIRED_SESSION_CODE);
+			 result.getErrorData().setDescription(ErrorData.EXPIRED_SESSION_MESSAGE);
+			 return result;
+		 }
+		 foundSession.setLastActivity(Calendar.getInstance().getTimeInMillis());
+		 boolean updateUserSession = sessionDao.updateUserSession(foundSession);
+		 if(!updateUserSession){
+			 result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
+			 result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+			 return result;
+		 }
+		 session.setLastActivity(foundSession.getLastActivity());
+		 result.setSession(session);
+		return result;
 	}
 
 	public SessionSummary getCurrentSession(SessionDTO session) {
-		// TODO Auto-generated method stub
-		return null;
+		SessionSummary result = new SessionSummary();
+		if(session == null || session.getSessionValue() == null){
+			result.getErrorData().setNumberCode(ErrorData.WRONG_PARAMETERS_IN_REQUEST_CODE);
+			 result.getErrorData().setDescription(ErrorData.WRONG_PARAMETERS_IN_REQUEST_MESSAGE);
+			 return result;
+		}
+		
+		UserSession currentSession = sessionDao.getUserSessionByValue(session.getSessionValue());
+		if(currentSession==null){
+			 result.getErrorData().setNumberCode(ErrorData.NO_SUCH_SESSION_CODE);
+			 result.getErrorData().setDescription(ErrorData.NO_SUCH_SESSION_MESSAGE);
+			 return result;
+		}
+		
+		SessionDTO sessionDto = new SessionDTO();
+		sessionDto.setActive(currentSession.isActive());
+		sessionDto.setLastActivity(currentSession.getLastActivity());
+		sessionDto.setSessionValue(currentSession.getSessionValue());
+		result.setSession(sessionDto);
+		
+		return result;
 	}
 
 	public SessionComponent getSessionComponent() {

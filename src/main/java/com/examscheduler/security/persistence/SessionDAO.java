@@ -7,8 +7,8 @@ public interface SessionDAO {
 	
 	public UserSession getUserSessionByValue(String userSession);
 	
-	public void updateUserSession(UserSession userSession);
+	public boolean updateUserSession(UserSession userSession);
 	
-	public int saveSession(UserSession userSession) throws PersistentActionException;
+	public Long saveSession(UserSession userSession) throws PersistentActionException;
 
 }
