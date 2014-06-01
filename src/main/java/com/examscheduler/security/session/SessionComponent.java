@@ -15,4 +15,9 @@ public class SessionComponent {
 		return sessionGenerator.generateSession();
 	}
 
+	public void setSessionGenerator(SessionGenerator sessionGenerator) {
+		this.sessionGenerator = sessionGenerator;
+	}
+
+
 }

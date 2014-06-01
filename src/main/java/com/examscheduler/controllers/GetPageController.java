@@ -50,10 +50,6 @@ public class GetPageController {
 	}
 	
 
-	public SessionService getSessionService() {
-		return sessionService;
-	}
-
 	public void setSessionService(SessionService sessionService) {
 		this.sessionService = sessionService;
 	}

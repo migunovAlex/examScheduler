@@ -15,6 +15,7 @@ import com.examscheduler.security.persistence.entity.UserSession;
 @Transactional
 public class SessionDAOImpl implements SessionDAO {
 
+	protected static final String SESSION_VALUE = "sessionValue";
 	@Autowired
 	private SessionFactory sessionFactory;
 	
@@ -24,15 +25,18 @@ public class SessionDAOImpl implements SessionDAO {
 	
 	@SuppressWarnings("unchecked")
 	public UserSession getUserSessionByValue(String userSession) {
-		List<UserSession> userSessionList = currentSession().createCriteria(UserSession.class).add(Restrictions.eq("sessionValue", userSession)).list();
+		List<UserSession> userSessionList = currentSession().createCriteria(UserSession.class).add(Restrictions.eq(SESSION_VALUE, userSession)).list();
 		if(userSessionList.size()==0) return null;
 		return userSessionList.get(0);
 	}
 
 	public boolean updateUserSession(UserSession userSession) {
-		return false;
-		// TODO Auto-generated method stub
-
+		try{
+			currentSession().update(userSession);
+		}catch(HibernateException e){
+			return false;
+		}
+		return true;
 	}
 
 	public Long saveSession(UserSession userSession) throws PersistentActionException {

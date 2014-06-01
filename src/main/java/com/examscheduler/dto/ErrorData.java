@@ -24,6 +24,11 @@ public class ErrorData {
 	public static final int NO_SUCH_SESSION_CODE = 603;
 	public static final String NO_SUCH_SESSION_MESSAGE = "There is no such session";
 	
+	public ErrorData(){
+		this.numberCode = OK_CODE;
+		this.description = OK_MESSAGE;
+	}
+	
 	public int getNumberCode() {
 		return numberCode;
 	}

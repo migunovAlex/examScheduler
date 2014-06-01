@@ -12,6 +12,7 @@ import com.examscheduler.security.persistence.SessionDAO;
 import com.examscheduler.security.persistence.entity.DbUser;
 import com.examscheduler.security.persistence.entity.UserSession;
 import com.examscheduler.security.session.SessionComponent;
+import com.examscheduler.summary.OperationResultSummary;
 import com.examscheduler.summary.SessionSummary;
 
 @Transactional
@@ -39,18 +40,15 @@ public class SessionServiceImpl implements SessionService {
 		userSession.setActive(true);
 		userSession.setUser(user);
 		userSession.setLastActivity(Calendar.getInstance().getTimeInMillis());
-		Long sessionId;
 		try {
-			sessionId = getSessionDao().saveSession(userSession);
-			if(sessionId != 0){
+				getSessionDao().saveSession(userSession);
 				SessionDTO sessionDtoResult = new SessionDTO();
 				sessionDtoResult.setSessionValue(userSession.getSessionValue());
 				sessionDtoResult.setLastActivity(userSession.getLastActivity());
 				sessionDtoResult.setActive(userSession.isActive());
 				result.setSession(sessionDtoResult);
-			}
 		} catch (PersistentActionException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
 			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
 		}
@@ -73,8 +71,8 @@ public class SessionServiceImpl implements SessionService {
 		return userSessionByValue == null ? true : false;
 	}
 
-	public SessionSummary updateSessionActivity(SessionDTO session) {
-		SessionSummary result = new SessionSummary();
+	public OperationResultSummary updateSessionActivity(SessionDTO session) {
+		OperationResultSummary result = new OperationResultSummary();
 		if(session.getSessionValue() == null){
 			result.getErrorData().setNumberCode(ErrorData.WRONG_PARAMETERS_IN_REQUEST_CODE);
 			 result.getErrorData().setDescription(ErrorData.WRONG_PARAMETERS_IN_REQUEST_MESSAGE);
@@ -96,10 +94,11 @@ public class SessionServiceImpl implements SessionService {
 		 if(!updateUserSession){
 			 result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
 			 result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+			 result.setOperationResult(false);
 			 return result;
 		 }
 		 session.setLastActivity(foundSession.getLastActivity());
-		 result.setSession(session);
+		 result.setOperationResult(true);
 		return result;
 	}
 
