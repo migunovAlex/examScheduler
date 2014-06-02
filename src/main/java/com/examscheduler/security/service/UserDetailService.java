@@ -25,9 +25,6 @@ public class UserDetailService implements UserDetailsService{
 	@Autowired
 	private UserDao userDao;
 	
-	@Autowired
-	private SessionService sessionService;
-
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 
@@ -42,8 +39,6 @@ public class UserDetailService implements UserDetailsService{
 				true,
 				true,
 				getAuthorities(dbUser.getAccess()));
-		
-		getSessionService().getNewSession(dbUser);
 		
 		return user;
 	}
@@ -64,14 +59,6 @@ public class UserDetailService implements UserDetailsService{
 
 	public void setUserDao(UserDao userDao) {
 		this.userDao = userDao;
-	}
-
-	public SessionService getSessionService() {
-		return sessionService;
-	}
-
-	public void setSessionService(SessionService sessionService) {
-		this.sessionService = sessionService;
 	}
 
 }

@@ -76,12 +76,14 @@ public class SessionServiceImpl implements SessionService {
 		if(session.getSessionValue() == null){
 			result.getErrorData().setNumberCode(ErrorData.WRONG_PARAMETERS_IN_REQUEST_CODE);
 			 result.getErrorData().setDescription(ErrorData.WRONG_PARAMETERS_IN_REQUEST_MESSAGE);
+			 result.setOperationResult(false);
 			 return result;
 		}
 		 UserSession foundSession = sessionDao.getUserSessionByValue(session.getSessionValue());
 		 if(foundSession==null){
 			 result.getErrorData().setNumberCode(ErrorData.NO_SUCH_SESSION_CODE);
 			 result.getErrorData().setDescription(ErrorData.NO_SUCH_SESSION_MESSAGE);
+			 result.setOperationResult(false);
 			 return result;
 		 }
 		 if(!foundSession.isActive()){

@@ -27,9 +27,6 @@ public class UserDetailServiceTest {
 
 	@Mock
 	private UserDao userDao;
-	@Mock
-	private SessionService sessionService;
-	
 	private UserDetailService testInstance;
 	
 	@Before
@@ -37,7 +34,6 @@ public class UserDetailServiceTest {
 		MockitoAnnotations.initMocks(this);
 		testInstance = new UserDetailService();
 		testInstance.setUserDao(userDao);
-		testInstance.setSessionService(sessionService);
 	}
 	
 	@Test
