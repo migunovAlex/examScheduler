@@ -24,4 +24,20 @@ public class GetPageController {
 		model.addAttribute("userSession", "FAKE_USER_SESSION");
 		return "mainPage";
 	}
+	
+	@RequestMapping(value="/secured/lessontime", method=RequestMethod.GET)
+	public String getLessonTimePage(){
+		return "lessonTime";
+	}
+	
+	@RequestMapping(value="/secured/teacher", method=RequestMethod.GET)
+	public String getTeacherPage(){
+		return "teacherPage";
+	}
+	
+	@RequestMapping(value="/secured/lessons", method=RequestMethod.GET)
+	public String getLessonsPage(){
+		return "lessonPage";
+	}
+	
 }
