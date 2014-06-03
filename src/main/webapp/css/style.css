@@ -23,6 +23,7 @@
 	padding:9px 24px;
 	text-decoration:none;
 	text-shadow:0px 1px 0px #ffee66;
+	margin-top: 5px;
 }
 .myButton:hover {
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffab23), color-stop(1, #ffec64));
@@ -37,4 +38,9 @@
 .myButton:active {
 	position:relative;
 	top:1px;
+}
+.menu-block{
+	width:100%;
+	margin-top: 5px
+	height:50px;
 }

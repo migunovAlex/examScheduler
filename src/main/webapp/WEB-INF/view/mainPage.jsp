@@ -13,8 +13,8 @@
 	<script type="text/javascript" src="../../../js/maintemplate.js"></script>
 	
 	<c:if test="${userSession!=null}">
-		<jsp:include page="informationBlock.jsp"/>
 		<jsp:include page="mainPageMenu.jsp"/>
+		<jsp:include page="informationBlock.jsp"/>
 	</c:if>
 	<h1>Main Page</h1>
 	<c:out value="${userSession}"/>
