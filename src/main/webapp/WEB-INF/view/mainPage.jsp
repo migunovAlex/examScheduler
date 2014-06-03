@@ -7,10 +7,6 @@
 </head>
 <body>
 	<jsp:include page="pageTemplate.jsp"/>
-	<link rel="stylesheet" type="text/css" href="../../../css/maintemplate.css" />
-
-	<script type="text/javascript" src="../../../js/jquery-1.9.1.js"></script>
-	<script type="text/javascript" src="../../../js/maintemplate.js"></script>
 	
 	<c:if test="${userSession!=null}">
 		<jsp:include page="informationBlock.jsp"/>
