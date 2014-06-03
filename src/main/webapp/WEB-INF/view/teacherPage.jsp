@@ -6,7 +6,6 @@
 <title>Преподаватели</title>
 </head>
 <body>
-	<link rel="stylesheet" type="text/css" href="../../css/style.css" />
 	<jsp:include page="mainPageMenu.jsp"/>
 	<h1>Teacher Page</h1>
 </body>

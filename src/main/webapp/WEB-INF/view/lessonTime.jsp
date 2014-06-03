@@ -7,7 +7,6 @@
 <title>Lesson Time</title>
 </head>
 <body>
-	<link rel="stylesheet" type="text/css" href="../../css/style.css" />
 	<jsp:include page="mainPageMenu.jsp"/>
 	<h1>Lesson Time</h1>
 </body>
