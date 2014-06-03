@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.examscheduler.entity.Auditorie;
 import com.examscheduler.entity.LessonsTime;
-import com.examscheduler.persistence.PersistenceDAO;
 
 @Transactional
 public class PersistenceImpl implements PersistenceDAO {
@@ -20,7 +19,6 @@ public class PersistenceImpl implements PersistenceDAO {
 	private SessionFactory sessionFactory;
 
 	private Session currentSession(){
-		System.out.println("sessionFactory: " + sessionFactory);
 		return getSessionFactory().getCurrentSession();
 	}
 
@@ -36,7 +34,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().save(auditorie);
 		}catch(HibernateException e){
-			e.printStackTrace();
+//			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -56,7 +54,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().update(auditorie);
 		}catch(HibernateException e){
-			e.printStackTrace();
+//			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -68,7 +66,7 @@ public class PersistenceImpl implements PersistenceDAO {
 			auditorie = (Auditorie) currentSession().load(Auditorie.class, auditorieId);
 			Hibernate.initialize(auditorie);
 		}catch(HibernateException e){
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return auditorie;
 	}
@@ -79,7 +77,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			listAuditorie = currentSession().createCriteria(Auditorie.class).list();
 		}catch(HibernateException e){
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return listAuditorie;
 	}
@@ -117,7 +115,7 @@ public class PersistenceImpl implements PersistenceDAO {
 			lessonsTime = (LessonsTime) currentSession().load(LessonsTime.class, lessonsTimeId);
 			Hibernate.initialize(lessonsTime);
 		}catch(HibernateException e){
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return lessonsTime;
 	}
@@ -128,7 +126,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			listLessonTime = currentSession().createCriteria(LessonsTime.class).list();
 		}catch(HibernateException e){
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return listLessonTime;
 	}

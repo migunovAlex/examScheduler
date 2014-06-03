@@ -1,4 +1,4 @@
-package com.examscheduler.security;
+package com.examscheduler.security.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -27,7 +27,6 @@ public class UserDetailServiceTest {
 
 	@Mock
 	private UserDao userDao;
-	
 	private UserDetailService testInstance;
 	
 	@Before

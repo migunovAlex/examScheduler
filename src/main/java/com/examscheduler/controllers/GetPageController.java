@@ -1,13 +1,22 @@
 package com.examscheduler.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.examscheduler.security.service.SessionService;
+
 @Controller
 @RequestMapping("/pages")
 public class GetPageController {
+	
+	private static final String USER_SESSION_PARAM = "userSession";
+	
+	@Autowired
+	private SessionService sessionService;
+	
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String getLoginPage(){
@@ -21,7 +30,7 @@ public class GetPageController {
 	
 	@RequestMapping(value="/secured/mainpage", method=RequestMethod.GET)
 	public String getAuthorizedMainPage(ModelMap model){
-		model.addAttribute("userSession", "FAKE_USER_SESSION");
+		model.addAttribute(USER_SESSION_PARAM, "FAKE_USER_SESSION");
 		return "mainPage";
 	}
 	
@@ -40,4 +49,8 @@ public class GetPageController {
 		return "lessonPage";
 	}
 	
+
+	public void setSessionService(SessionService sessionService) {
+		this.sessionService = sessionService;
+	}
 }
