@@ -153,6 +153,7 @@
 				<!-- <version>2.5.2</version> -->
 				<configuration>
 					<instrumentation>
+						<ignoreTrivial>true</ignoreTrivial> 
 						<ignores>
 							<ignore>com.examscheduler.security.persistence.entity.*</ignore>
 							<ignore>com.examscheduler.entity.*</ignore>

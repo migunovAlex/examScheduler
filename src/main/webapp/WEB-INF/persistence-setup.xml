@@ -10,6 +10,8 @@
 	http://www.springframework.org/schema/context/spring-context-3.0.xsd
 	http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	
+	<context:annotation-config />
 
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -33,13 +35,14 @@
 			<list>
 				<value>com.examscheduler.security.persistence.entity.DbUser</value>
 				<value>com.examscheduler.entity.LessonsTime</value>
+				<value>com.examscheduler.security.persistence.entity.UserSession</value>
 			</list>
 		</property>
 	</bean>
 
-	<bean id="userDAO" class="com.examscheduler.security.persistence.UserDAOImpl">
-		<property name="sessionFactory" ref="sessionFactory"/>
-	</bean>
+	
+	<bean id="sessionDAO" class="com.examscheduler.security.persistence.SessionDAOImpl"/>
+	<bean id="userDAO" class="com.examscheduler.security.persistence.UserDAOImpl"/>
 	
 	<bean id="txManager"
         class="org.springframework.orm.hibernate3.HibernateTransactionManager">

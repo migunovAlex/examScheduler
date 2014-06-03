@@ -17,40 +17,35 @@ import com.examscheduler.service.SchedulerDataService;
 public class OperationController {
 	
 	@Autowired
-	private SchedulerDataService serviceDataScheduler;
+	private SchedulerDataService schedulerDataService;
 	
 	public void setServiceDataScheduler(SchedulerDataService serviceDataScheduler) {
-		this.serviceDataScheduler = serviceDataScheduler;
+		this.schedulerDataService = serviceDataScheduler;
 	}
 
 	@RequestMapping(value="/classtime/new", method=RequestMethod.POST)
 	public @ResponseBody Boolean createLessonsTime(@RequestBody LessonTimeDTO lessonTime){
-		Boolean createResult = serviceDataScheduler.createLessonTime(lessonTime);
-		return createResult;
+		return schedulerDataService.createLessonTime(lessonTime);
 	}
 	
 	@RequestMapping(value="/classtime/edit", method=RequestMethod.POST)
 	public @ResponseBody LessonTimeDTO updLessonsTime(@RequestBody LessonTimeDTO lessonTime){
-		LessonTimeDTO updLessonTime = serviceDataScheduler.updateLessonTime(lessonTime);		
-		return updLessonTime;
+		return schedulerDataService.updateLessonTime(lessonTime);
 	}
 	
 	@RequestMapping(value="/classtime/delete", method=RequestMethod.POST)
 	public @ResponseBody Boolean deleteLessonsTime(@RequestBody Integer lessonTimeId){
-		Boolean delLessonTime = serviceDataScheduler.deleteLessonTime(lessonTimeId);
-		return delLessonTime;
+		return schedulerDataService.deleteLessonTime(lessonTimeId);
 	}
 	
 	@RequestMapping(value="/classtime/all", method=RequestMethod.POST)
 	public @ResponseBody List<LessonTimeDTO> getListLessonTime(){
-		List<LessonTimeDTO> listLessonTime = serviceDataScheduler.getListLessonTime();
-		return listLessonTime;
+		return schedulerDataService.getListLessonTime();
 	}
 	
 	@RequestMapping(value="/classtime/get", method=RequestMethod.POST)
 	public @ResponseBody LessonTimeDTO getLessonTime(@RequestBody Integer lessonTimeId){
-		LessonTimeDTO lessonTimeDTO = serviceDataScheduler.loadLessonTime(lessonTimeId);
-		return lessonTimeDTO;
+		return schedulerDataService.loadLessonTime(lessonTimeId);
 	}
 
 }

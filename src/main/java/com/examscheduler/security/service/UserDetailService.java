@@ -1,4 +1,4 @@
-package com.examscheduler.security;
+package com.examscheduler.security.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,9 +18,13 @@ import com.examscheduler.security.persistence.entity.DbUser;
 @SuppressWarnings("deprecation")
 public class UserDetailService implements UserDetailsService{
 	
+	private static final String ROLE_ADMIN = "ROLE_ADMIN";
+	private static final String ROLE_MANAGER = "ROLE_MANAGER";
+	private static final String ROLE_USER = "ROLE_USER";
+
 	@Autowired
 	private UserDao userDao;
-
+	
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 
@@ -42,9 +46,9 @@ public class UserDetailService implements UserDetailsService{
 	private Collection<GrantedAuthority> getAuthorities(Integer access) {
 		List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();
 		
-		authList.add(new GrantedAuthorityImpl("ROLE_USER"));
-		if(access.equals(2)) authList.add(new GrantedAuthorityImpl("ROLE_MANAGER"));
-		if(access.equals(1)) authList.add(new GrantedAuthorityImpl("ROLE_ADMIN"));
+		authList.add(new GrantedAuthorityImpl(ROLE_USER));
+		if(access.equals(2)) authList.add(new GrantedAuthorityImpl(ROLE_MANAGER));
+		if(access.equals(1)) authList.add(new GrantedAuthorityImpl(ROLE_ADMIN));
 		
 		return authList;
 	}
