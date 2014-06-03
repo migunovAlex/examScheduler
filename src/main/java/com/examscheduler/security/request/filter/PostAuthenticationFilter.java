@@ -6,13 +6,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.savedrequest.SavedRequest;
 
 import com.examscheduler.security.persistence.UserDao;
 import com.examscheduler.security.persistence.entity.DbUser;
@@ -20,6 +17,8 @@ import com.examscheduler.security.service.SessionService;
 import com.examscheduler.summary.SessionSummary;
 
 public class PostAuthenticationFilter implements AuthenticationSuccessHandler {
+
+	private static final String APP_PAGES_SECURED_MAINPAGE = "/app/pages/secured/mainpage";
 
 	protected static final String SESSION_PARAM = "SESSION_VALUE";
 
@@ -50,7 +49,7 @@ public class PostAuthenticationFilter implements AuthenticationSuccessHandler {
 			}
 
 		}
-		response.sendRedirect(request.getContextPath());
+		response.sendRedirect(request.getContextPath()+APP_PAGES_SECURED_MAINPAGE);
 	}
 
 	public SessionService getSessionService() {
