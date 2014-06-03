@@ -42,5 +42,19 @@ public class GetPageControllerTest {
 		assertEquals(controller.getAuthorizedMainPage(modelMap), "mainPage");
 		verify(modelMap, times(1)).addAttribute(eq("userSession"), any(String.class));
 	}
+	
+	@Test
+	public void shouldGetLessonTimePage(){
+		assertEquals(controller.getLessonTimePage(), "lessonTime");
+	}
 
+	@Test
+	public void shouldGetTeacherPage(){
+		assertEquals(controller.getTeacherPage(), "teacherPage");
+	}
+	
+	@Test
+	public void shouldGetLessonsPage(){
+		assertEquals(controller.getLessonsPage(), "lessonPage");
+	}
 }
