@@ -31,8 +31,7 @@
 
 		<security:form-login login-page="/app/pages/login"
 			authentication-failure-url="/app/pages/login?login_error=1"
-			authentication-success-handler-ref="postAuthenticationFilter"
-			default-target-url="/app/pages/secured/mainpage" />
+			authentication-success-handler-ref="postAuthenticationFilter" />
 
 		<security:logout invalidate-session="true"
 			logout-success-url="/app/pages/mainpage" logout-url="/app/pages/logout" />
@@ -52,6 +51,8 @@
 
 	<bean id="customUserDetailsService" class="com.examscheduler.security.service.UserDetailService"/>
 	
-	<bean id="postAuthenticationFilter" class="com.examscheduler.security.request.filter.PostAuthenticationFilter"/>
+	<bean id="postAuthenticationFilter" class="com.examscheduler.security.request.filter.PostAuthenticationFilter">
+		<property name="forwardURL" value="/app/pages/secured/mainpage"/>
+	</bean>
 	
 </beans>

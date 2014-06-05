@@ -18,8 +18,6 @@ import com.examscheduler.summary.SessionSummary;
 
 public class PostAuthenticationFilter implements AuthenticationSuccessHandler {
 
-	private static final String APP_PAGES_SECURED_MAINPAGE = "/app/pages/secured/mainpage";
-
 	protected static final String SESSION_PARAM = "SESSION_VALUE";
 
 	protected static final String PASSWORD_PARAM = "j_password";
@@ -28,6 +26,12 @@ public class PostAuthenticationFilter implements AuthenticationSuccessHandler {
 
 	@Autowired
 	private SessionService sessionService;
+	
+	private String forwardURL;
+
+	public void setForwardURL(String forwardURL) {
+		this.forwardURL = forwardURL;
+	}
 
 	@Autowired
 	private UserDao userDao;
@@ -49,7 +53,7 @@ public class PostAuthenticationFilter implements AuthenticationSuccessHandler {
 			}
 
 		}
-		response.sendRedirect(request.getContextPath()+APP_PAGES_SECURED_MAINPAGE);
+		response.sendRedirect(request.getContextPath()+forwardURL);
 	}
 
 	public SessionService getSessionService() {
