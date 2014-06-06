@@ -1,8 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<link rel="stylesheet" type="text/css" href="../../css/maintemplate.css" />
-<link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css" />
-<script type="text/javascript" src="../../js/jquery-1.9.1.js"></script>
-<script type="text/javascript" src="../../js/jquery.bootstrap-growl.min.js"></script>
-<script type="text/javascript" src="../../js/jquery.bootstrap-growl.js"></script>
-<script type="text/javascript" src="../../js/maintemplate.js"></script>
+<c:set var="pathForSecuredResources" value=""/>
+<c:if test="${userSession!=null}">
+	<c:set var="pathForSecuredResources" value="../"/>
+</c:if>
+<link rel="stylesheet" type="text/css" href="${pathForSecuredResources}../../css/maintemplate.css" />
+<link rel="stylesheet" type="text/css" href="${pathForSecuredResources}../../css/jquery.growl.css" />
+<script type="text/javascript" src="${pathForSecuredResources}../../js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="${pathForSecuredResources}../../js/jquery.growl.js"></script>
+<script type="text/javascript" src="${pathForSecuredResources}../../js/maintemplate.js"></script>

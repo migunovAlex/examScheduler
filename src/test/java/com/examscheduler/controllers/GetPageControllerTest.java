@@ -1,10 +1,12 @@
 package com.examscheduler.controllers;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,14 +14,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ui.ModelMap;
 
-import com.examscheduler.controllers.GetPageController;
-
 public class GetPageControllerTest {
 	
+	private static final String FAKE_SESSION = "FAKE_SESSION";
+
 	private GetPageController controller;
 	
 	@Mock
 	private ModelMap modelMap;
+	@Mock
+	private HttpServletRequest request;
 
 	@Before
 	public void setup(){
@@ -39,10 +43,17 @@ public class GetPageControllerTest {
 	
 	@Test
 	public void shouldGetMainPageForAuthorised(){
-		assertEquals(controller.getAuthorizedMainPage(modelMap), "mainPage");
-		verify(modelMap, times(1)).addAttribute(eq("userSession"), any(String.class));
+		when(request.getCookies()).thenReturn(createCookies());
+		assertEquals(controller.getAuthorizedMainPage(request, modelMap), "mainPage");
+		verify(modelMap, times(1)).addAttribute("userSession", FAKE_SESSION);
 	}
 	
+	private Cookie[] createCookies() {
+		Cookie[] result = new Cookie[1];
+		result[0] = new Cookie(GetPageController.SESSION_VALUE, FAKE_SESSION);
+		return result;
+	}
+
 	@Test
 	public void shouldGetLessonTimePage(){
 		assertEquals(controller.getLessonTimePage(), "lessonTime");

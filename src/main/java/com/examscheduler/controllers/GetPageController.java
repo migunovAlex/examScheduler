@@ -1,5 +1,8 @@
 package com.examscheduler.controllers;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,7 +15,9 @@ import com.examscheduler.security.service.SessionService;
 @RequestMapping("/pages")
 public class GetPageController {
 	
-	private static final String USER_SESSION_PARAM = "userSession";
+	protected static final String SESSION_VALUE = "SESSION_VALUE";
+
+	protected static final String USER_SESSION_PARAM = "userSession";
 	
 	@Autowired
 	private SessionService sessionService;
@@ -29,11 +34,23 @@ public class GetPageController {
 	}
 	
 	@RequestMapping(value="/secured/mainpage", method=RequestMethod.GET)
-	public String getAuthorizedMainPage(ModelMap model){
-		model.addAttribute(USER_SESSION_PARAM, "FAKE_USER_SESSION");
+	public String getAuthorizedMainPage(HttpServletRequest request, ModelMap model){
+		String sessionCookie = getSessionCookie(request);
+		//need to check session for expiration
+		model.addAttribute(USER_SESSION_PARAM, sessionCookie);
 		return "mainPage";
 	}
 	
+	private String getSessionCookie(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		for(Cookie cookie : cookies){
+			if(cookie.getName().equals(SESSION_VALUE)){
+				return cookie.getValue();
+			}
+		}
+		return null;
+	}
+
 	@RequestMapping(value="/secured/lessontime", method=RequestMethod.GET)
 	public String getLessonTimePage(){
 		return "lessonTime";

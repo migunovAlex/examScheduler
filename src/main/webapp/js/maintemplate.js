@@ -2,7 +2,7 @@
 	
 	
 	$( document ).ready(function() {
-		$.bootstrapGrowl("This is a test.");
+		$.growl.notice({ message: "Messages was initialized!" });
 		
 	});
 	

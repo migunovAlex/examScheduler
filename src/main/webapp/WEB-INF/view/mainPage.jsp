@@ -13,7 +13,6 @@
 		<jsp:include page="mainPageMenu.jsp"/>
 	</c:if>
 	<h1>Main Page</h1>
-	<c:out value="${userSession}"/>
 	<c:if test="${userSession!=null}">
 		<jsp:include page="footerBlock.jsp"/>
 	</c:if>
