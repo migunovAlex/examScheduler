@@ -42,6 +42,19 @@ public class UserDetailService implements UserDetailsService{
 		
 		return user;
 	}
+	
+	public UserDetails getUserDetailsBySession(String sessionValue){
+		DbUser foundUser = 	userDao.getUserBySessionValue(sessionValue);
+		if(foundUser == null) return null;
+		UserDetails user = new User(foundUser.getUsername(),
+				foundUser.getPassword().toLowerCase(),
+				true,
+				true,
+				true,
+				true,
+				getAuthorities(foundUser.getAccess()));
+		return user;
+	}
 
 	private Collection<GrantedAuthority> getAuthorities(Integer access) {
 		List<GrantedAuthority> authList = new ArrayList<GrantedAuthority>();

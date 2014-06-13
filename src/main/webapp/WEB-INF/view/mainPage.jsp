@@ -9,8 +9,8 @@
 	<jsp:include page="pageTemplate.jsp"/>
 	
 	<c:if test="${userSession!=null}">
-		<jsp:include page="mainPageMenu.jsp"/>
 		<jsp:include page="informationBlock.jsp"/>
+		<jsp:include page="mainPageMenu.jsp"/>
 	</c:if>
 	<h1>Main Page</h1>
 	<c:if test="${userSession!=null}">

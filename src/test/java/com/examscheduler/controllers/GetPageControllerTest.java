@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.ui.ModelMap;
 
+import com.examscheduler.security.service.UserDetailService;
+
 public class GetPageControllerTest {
 	
 	private static final String FAKE_SESSION = "FAKE_SESSION";
@@ -24,11 +26,14 @@ public class GetPageControllerTest {
 	private ModelMap modelMap;
 	@Mock
 	private HttpServletRequest request;
+	@Mock
+	private UserDetailService userDetailService;
 
 	@Before
 	public void setup(){
 		MockitoAnnotations.initMocks(this);
 		controller = new GetPageController();
+		controller.setUserDetailService(userDetailService);
 	}
 	
 	@Test

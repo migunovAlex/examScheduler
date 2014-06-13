@@ -4,23 +4,29 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.examscheduler.security.service.SessionService;
+import com.examscheduler.security.service.UserDetailService;
 
 @Controller
 @RequestMapping("/pages")
 public class GetPageController {
 	
+	private static final String USER_NAME_PARAM = "userName";
+
 	protected static final String SESSION_VALUE = "SESSION_VALUE";
 
 	protected static final String USER_SESSION_PARAM = "userSession";
 	
 	@Autowired
 	private SessionService sessionService;
+	@Autowired
+	private UserDetailService userDetailService;
 	
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
@@ -38,6 +44,12 @@ public class GetPageController {
 		String sessionCookie = getSessionCookie(request);
 		//need to check session for expiration
 		model.addAttribute(USER_SESSION_PARAM, sessionCookie);
+		
+		UserDetails userDetails = userDetailService.getUserDetailsBySession(sessionCookie);
+		if(userDetails!=null){
+			model.addAttribute(USER_NAME_PARAM, userDetails.getUsername());
+		}
+		
 		return "mainPage";
 	}
 	
@@ -69,5 +81,9 @@ public class GetPageController {
 
 	public void setSessionService(SessionService sessionService) {
 		this.sessionService = sessionService;
+	}
+
+	public void setUserDetailService(UserDetailService userDetailService) {
+		this.userDetailService = userDetailService;
 	}
 }
