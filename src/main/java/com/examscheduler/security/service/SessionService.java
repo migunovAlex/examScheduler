@@ -12,5 +12,7 @@ public interface SessionService {
 	public OperationResultSummary updateSessionActivity(SessionDTO session);
 	
 	public SessionSummary getCurrentSession(SessionDTO session);
+	
+	public OperationResultSummary logout(String session);
 
 }

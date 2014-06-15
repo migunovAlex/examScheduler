@@ -144,4 +144,31 @@ public class SessionServiceImpl implements SessionService {
 		this.sessionDao = sessionDao;
 	}
 
+	public OperationResultSummary logout(String session) {
+		OperationResultSummary result = new OperationResultSummary();
+		UserSession currentSession = sessionDao.getUserSessionByValue(session);
+		if(currentSession==null){
+			 result.setOperationResult(Boolean.FALSE);
+			 result.getErrorData().setNumberCode(ErrorData.NO_SUCH_SESSION_CODE);
+			 result.getErrorData().setDescription(ErrorData.NO_SUCH_SESSION_MESSAGE);
+			 return result;
+		}
+		if(!currentSession.isActive()){
+			result.setOperationResult(Boolean.FALSE);
+			 result.getErrorData().setNumberCode(ErrorData.EXPIRED_SESSION_CODE);
+			 result.getErrorData().setDescription(ErrorData.EXPIRED_SESSION_MESSAGE);
+			 return result;
+		}
+		currentSession.setActive(Boolean.FALSE);
+		currentSession.setLastActivity(Calendar.getInstance().getTimeInMillis());
+		boolean updateUserSession = sessionDao.updateUserSession(currentSession);
+		if(!updateUserSession){
+			result.setOperationResult(Boolean.FALSE);
+			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_EXECUTE_OPERATION_CODE);
+			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_EXECUTE_OPERATION_MESSAGE);
+			return result;
+		}
+		return result;
+	}
+
 }

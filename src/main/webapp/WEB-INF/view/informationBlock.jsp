@@ -11,8 +11,8 @@
 				</div>
 			</td>
 			<td>
-				<div class="logout-button">
-					<a href="#">Выйти</a>
+				<div class="logout-block">
+					<a id="logout-button" href="#">Выйти</a>
 				</div>
 			</td>
 		</tr>

@@ -23,6 +23,9 @@ public class ErrorData {
 	public static final int NO_SUCH_SESSION_CODE = 603;
 	public static final String NO_SUCH_SESSION_MESSAGE = "There is no such session";
 	
+	public static final int ERROR_WHILE_EXECUTE_OPERATION_CODE = 604;
+	public static final String ERROR_WHILE_EXECUTE_OPERATION_MESSAGE = "Error while execute operation";
+	
 	public ErrorData(){
 		this.numberCode = OK_CODE;
 		this.description = OK_MESSAGE;

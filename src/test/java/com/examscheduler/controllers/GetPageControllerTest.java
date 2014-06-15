@@ -5,7 +5,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Before;
@@ -28,12 +27,15 @@ public class GetPageControllerTest {
 	private HttpServletRequest request;
 	@Mock
 	private UserDetailService userDetailService;
+	@Mock
+	private CookieHelper cookieHelper;
 
 	@Before
 	public void setup(){
 		MockitoAnnotations.initMocks(this);
 		controller = new GetPageController();
 		controller.setUserDetailService(userDetailService);
+		controller.setCookieHelper(cookieHelper);
 	}
 	
 	@Test
@@ -48,17 +50,11 @@ public class GetPageControllerTest {
 	
 	@Test
 	public void shouldGetMainPageForAuthorised(){
-		when(request.getCookies()).thenReturn(createCookies());
+		when(cookieHelper.getSessionCookie(request)).thenReturn(FAKE_SESSION);
 		assertEquals(controller.getAuthorizedMainPage(request, modelMap), "mainPage");
 		verify(modelMap, times(1)).addAttribute("userSession", FAKE_SESSION);
 	}
 	
-	private Cookie[] createCookies() {
-		Cookie[] result = new Cookie[1];
-		result[0] = new Cookie(GetPageController.SESSION_VALUE, FAKE_SESSION);
-		return result;
-	}
-
 	@Test
 	public void shouldGetLessonTimePage(){
 		assertEquals(controller.getLessonTimePage(), "lessonTime");
