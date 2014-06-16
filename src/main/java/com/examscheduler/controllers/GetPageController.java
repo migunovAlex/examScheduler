@@ -9,19 +9,16 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.examscheduler.security.service.SessionService;
 import com.examscheduler.security.service.UserDetailService;
 
 @Controller
 @RequestMapping("/pages")
 public class GetPageController {
 	
-	private static final String USER_NAME_PARAM = "userName";
+	protected static final String USER_NAME_PARAM = "userName";
 
 	protected static final String USER_SESSION_PARAM = "userSession";
 	
-	@Autowired
-	private SessionService sessionService;
 	@Autowired
 	private UserDetailService userDetailService;
 	@Autowired
@@ -67,11 +64,6 @@ public class GetPageController {
 		return "lessonPage";
 	}
 	
-
-	public void setSessionService(SessionService sessionService) {
-		this.sessionService = sessionService;
-	}
-
 	public void setUserDetailService(UserDetailService userDetailService) {
 		this.userDetailService = userDetailService;
 	}
