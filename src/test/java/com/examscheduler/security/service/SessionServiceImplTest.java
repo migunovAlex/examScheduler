@@ -182,6 +182,52 @@ public class SessionServiceImplTest {
 		assertNotNull(currentSession.getSession());
 	}
 	
+	@Test
+	public void shouldNotLogoutOnNotFoundSession(){
+		when(sessionDAO.getUserSessionByValue(FAKE_SESSION)).thenReturn(null);
+		OperationResultSummary logout = testInstance.logout(FAKE_SESSION);
+		assertNotNull(logout);
+		assertEquals(Boolean.FALSE, logout.isOperationResult());
+		assertEquals(ErrorData.NO_SUCH_SESSION_CODE, logout.getErrorData().getNumberCode());
+		assertEquals(ErrorData.NO_SUCH_SESSION_MESSAGE, logout.getErrorData().getDescription());
+	}
+	
+	@Test
+	public void shouldNotLogoutOnNotActiveSession(){
+		UserSession userSession = createUserSession();
+		userSession.setActive(Boolean.FALSE);
+		when(sessionDAO.getUserSessionByValue(FAKE_SESSION)).thenReturn(userSession);
+		OperationResultSummary logout = testInstance.logout(FAKE_SESSION);
+		assertNotNull(logout);
+		assertEquals(Boolean.FALSE, logout.isOperationResult());
+		assertEquals(ErrorData.EXPIRED_SESSION_CODE, logout.getErrorData().getNumberCode());
+		assertEquals(ErrorData.EXPIRED_SESSION_MESSAGE, logout.getErrorData().getDescription());
+	}
+	
+	@Test
+	public void shouldNotLogoutOnPersistentException(){
+		UserSession userSession = createUserSession();
+		when(sessionDAO.getUserSessionByValue(FAKE_SESSION)).thenReturn(userSession);
+		when(sessionDAO.updateUserSession(userSession)).thenReturn(Boolean.FALSE);
+		OperationResultSummary logout = testInstance.logout(FAKE_SESSION);
+		assertNotNull(logout);
+		assertEquals(Boolean.FALSE, logout.isOperationResult());
+		assertEquals(ErrorData.ERROR_WHILE_EXECUTE_OPERATION_CODE, logout.getErrorData().getNumberCode());
+		assertEquals(ErrorData.ERROR_WHILE_EXECUTE_OPERATION_MESSAGE, logout.getErrorData().getDescription());
+	}
+	
+	@Test
+	public void shouldLogoutSuccessfully(){
+		UserSession userSession = createUserSession();
+		when(sessionDAO.getUserSessionByValue(FAKE_SESSION)).thenReturn(userSession);
+		when(sessionDAO.updateUserSession(userSession)).thenReturn(Boolean.TRUE);
+		OperationResultSummary logout = testInstance.logout(FAKE_SESSION);
+		assertNotNull(logout);
+		assertEquals(Boolean.TRUE, logout.isOperationResult());
+		assertEquals(ErrorData.OK_CODE, logout.getErrorData().getNumberCode());
+		assertEquals(ErrorData.OK_MESSAGE, logout.getErrorData().getDescription());
+	}
+	
 
 	private UserSession createUserSession() {
 		UserSession userSession = new UserSession();

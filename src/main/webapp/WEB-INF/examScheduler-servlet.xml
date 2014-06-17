@@ -46,6 +46,6 @@
     
     <bean id="persistenceDAO" class="com.examscheduler.persistence.PersistenceImpl"/>
     
-    
+    <bean id="cookieHelper" class="com.examscheduler.controllers.CookieHelper"/>
    
 </beans>    

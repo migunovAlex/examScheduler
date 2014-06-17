@@ -9,6 +9,7 @@ public class OperationResultSummary {
 	
 	public OperationResultSummary(){
 		errorData = new ErrorData();
+		operationResult = true;
 	}
 	
 	public ErrorData getErrorData() {
