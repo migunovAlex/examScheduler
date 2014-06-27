@@ -2,6 +2,7 @@ package com.examscheduler.security.persistence;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
 import org.hibernate.criterion.Restrictions;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.examscheduler.security.persistence.entity.DbUser;
+import com.examscheduler.security.persistence.entity.UserSession;
 
 @Transactional
 public class UserDAOImpl implements UserDao {
@@ -27,6 +29,15 @@ public class UserDAOImpl implements UserDao {
 		users = currentSession().createCriteria(DbUser.class).add(Restrictions.eq(USERNAME_FIELD_NAME, username)).list();
 		if(users.size()==0) return null;
 		return users.get(0);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public DbUser getUserBySessionValue(String sessionValue){
+		List<UserSession> userSessionList = currentSession().createCriteria(UserSession.class).add(Restrictions.eq("sessionValue", sessionValue)).list();
+		if(userSessionList.size() == 0) return null;
+		UserSession userSession = userSessionList.get(0);
+		Hibernate.initialize(userSession.getUser());
+		return userSession.getUser();
 	}
 	
 	public SessionFactory getSessionFactory() {

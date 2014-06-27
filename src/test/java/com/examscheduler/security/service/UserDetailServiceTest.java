@@ -2,6 +2,7 @@ package com.examscheduler.security.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import org.junit.Before;
@@ -15,6 +16,8 @@ import com.examscheduler.security.persistence.entity.DbUser;
 
 public class UserDetailServiceTest {
 	
+	private static final String FAKE_SESSION = "FAKE_SESSION";
+
 	private static final String ROLE_MANAGER = "ROLE_MANAGER";
 
 	private static final String MANAGER_USER = "manager";
@@ -60,6 +63,20 @@ public class UserDetailServiceTest {
 		assertNotNull(userDetails.getAuthorities());
 		assertEquals(userDetails.getAuthorities().isEmpty(), false);
 		assertEquals(userDetails.getAuthorities().iterator().next().getAuthority(), ROLE_MANAGER);
+	}
+	
+	@Test
+	public void shouldNotGetUserDetailsBySession(){
+		when(userDao.getUserBySessionValue(FAKE_SESSION)).thenReturn(null);
+		UserDetails userDetailsBySession = testInstance.getUserDetailsBySession(FAKE_SESSION);
+		assertNull(userDetailsBySession);
+	}
+	
+	@Test
+	public void shouldGetUserDetailsBySession(){
+		when(userDao.getUserBySessionValue(FAKE_SESSION)).thenReturn(createUser(1, ROOT_USER));
+		UserDetails userDetailsBySession = testInstance.getUserDetailsBySession(FAKE_SESSION);
+		assertNotNull(userDetailsBySession);
 	}
 	
 	private DbUser createUser(int access, String username) {

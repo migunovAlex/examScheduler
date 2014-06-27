@@ -1,26 +1,28 @@
 package com.examscheduler.controllers;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.examscheduler.security.service.SessionService;
+import com.examscheduler.security.service.UserDetailService;
 
 @Controller
 @RequestMapping("/pages")
 public class GetPageController {
 	
-	protected static final String SESSION_VALUE = "SESSION_VALUE";
+	protected static final String USER_NAME_PARAM = "userName";
 
 	protected static final String USER_SESSION_PARAM = "userSession";
 	
 	@Autowired
-	private SessionService sessionService;
+	private UserDetailService userDetailService;
+	@Autowired
+	private CookieHelper cookieHelper;
 	
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
@@ -35,22 +37,18 @@ public class GetPageController {
 	
 	@RequestMapping(value="/secured/mainpage", method=RequestMethod.GET)
 	public String getAuthorizedMainPage(HttpServletRequest request, ModelMap model){
-		String sessionCookie = getSessionCookie(request);
+		String sessionCookie = cookieHelper.getSessionCookie(request);
 		//need to check session for expiration
 		model.addAttribute(USER_SESSION_PARAM, sessionCookie);
+		
+		UserDetails userDetails = userDetailService.getUserDetailsBySession(sessionCookie);
+		if(userDetails!=null){
+			model.addAttribute(USER_NAME_PARAM, userDetails.getUsername());
+		}
+		
 		return "mainPage";
 	}
 	
-	private String getSessionCookie(HttpServletRequest request) {
-		Cookie[] cookies = request.getCookies();
-		for(Cookie cookie : cookies){
-			if(cookie.getName().equals(SESSION_VALUE)){
-				return cookie.getValue();
-			}
-		}
-		return null;
-	}
-
 	@RequestMapping(value="/secured/lessontime", method=RequestMethod.GET)
 	public String getLessonTimePage(){
 		return "lessonTime";
@@ -66,8 +64,11 @@ public class GetPageController {
 		return "lessonPage";
 	}
 	
+	public void setUserDetailService(UserDetailService userDetailService) {
+		this.userDetailService = userDetailService;
+	}
 
-	public void setSessionService(SessionService sessionService) {
-		this.sessionService = sessionService;
+	public void setCookieHelper(CookieHelper cookieHelper) {
+		this.cookieHelper = cookieHelper;
 	}
 }
