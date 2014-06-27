@@ -109,6 +109,17 @@ public class SessionDAOImplTest {
 		testInstance.saveSession(singleUserSession);
 	}
 
+	@Test
+	public void shouldGetUserSessionIsActive(){
+		when(session.createCriteria(UserSession.class)).thenReturn(criteria);
+		when(criteria.add(any(Criterion.class))).thenReturn(criteriaForGetList);
+		when(criteriaForGetList.list()).thenReturn(getSessionList());
+		List<UserSession> listUserSessionIsActive = testInstance.getUserSessionIsActive();
+		assertNotNull(listUserSessionIsActive);
+		assertEquals(listUserSessionIsActive.size(), 1);
+		assertEquals(listUserSessionIsActive.get(0).isActive(), true);
+	}
+
 	private UserSession getSingleUserSession() {
 		UserSession userSession = new UserSession();
 		userSession.setActive(true);

@@ -143,5 +143,4 @@ public class SessionServiceImpl implements SessionService {
 	public void setSessionDao(SessionDAO sessionDao) {
 		this.sessionDao = sessionDao;
 	}
-
 }

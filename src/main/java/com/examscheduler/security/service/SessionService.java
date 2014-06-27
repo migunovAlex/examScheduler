@@ -12,5 +12,4 @@ public interface SessionService {
 	public OperationResultSummary updateSessionActivity(SessionDTO session);
 	
 	public SessionSummary getCurrentSession(SessionDTO session);
-
 }

@@ -18,6 +18,10 @@ public class SessionComponentTest {
 
 	@Mock
 	private SessionGenerator sessionGenerator;
+	@Mock
+	private Thread mockTread;
+	@Mock
+	private SessionComponent.TimeThread mockTimeThread;
 	
 	private SessionComponent testInstance;
 	
@@ -25,6 +29,9 @@ public class SessionComponentTest {
 	public void setUp(){
 		testInstance = new SessionComponent();
 		testInstance.setSessionGenerator(sessionGenerator);
+		testInstance.setGetSessionThread(mockTread);
+		testInstance.setTimeThread(mockTimeThread);
+		testInstance.setNeedToInitialize(Boolean.TRUE);
 		when(sessionGenerator.generateSession()).thenReturn(FAKE_GENERATED_SESSION);
 	}
 	
@@ -33,5 +40,14 @@ public class SessionComponentTest {
 		String generateNewSession = testInstance.generateNewSession();
 		assertNotNull(generateNewSession);
 	}
-
+	
+	@Test
+	public void shouldInit(){
+		
+	}
+	
+	@Test
+	public void shouldInitialize(){
+		
+	}
 }

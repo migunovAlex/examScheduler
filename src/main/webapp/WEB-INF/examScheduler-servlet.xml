@@ -30,7 +30,7 @@
     </bean>
     
     <bean id="sessionGenerator" class="com.examscheduler.security.tools.SessionGenerator"/>
-    <bean id="sessionComponent" class="com.examscheduler.security.session.SessionComponent"/>
+    <bean id="sessionComponent" class="com.examscheduler.security.session.SessionComponent" init-method="init"/>
     <bean id="sessionService" class="com.examscheduler.security.service.SessionServiceImpl"/>
     
     <bean id="jacksonMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter"/>

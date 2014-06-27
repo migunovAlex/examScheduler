@@ -2,7 +2,11 @@ package com.examscheduler.security.tools;
 
 import java.util.Random;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+
+import com.examscheduler.dto.SessionDTO;
+import com.examscheduler.security.persistence.entity.UserSession;
 
 @Component
 public class SessionGenerator {
@@ -34,5 +38,4 @@ public class SessionGenerator {
 		int randomNumber = new Random().nextInt(10);
 		return randomNumber;
 	}
-	
 }
