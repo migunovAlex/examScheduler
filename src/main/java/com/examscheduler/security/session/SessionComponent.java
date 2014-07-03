@@ -59,7 +59,8 @@ public class SessionComponent {
 
 	class TimeThread implements Runnable{
 		
-		private static final int SESSION_DISABLE_PERIOD = 15*60*1000;
+		private static final int SESSION_DISABLE_PERIOD = 20*60*1000;
+		private static final int THREAD_SLEEP_PERIOD = 60*1000;
 
 		public TimeThread(){}
 
@@ -67,9 +68,8 @@ public class SessionComponent {
 			
 			while(true){
 				checkSession();
-				System.out.println("Runned Thread");
 				try{
-		            Thread.sleep(60000);
+		            Thread.sleep(THREAD_SLEEP_PERIOD);
 		        }catch(InterruptedException e){
 		        	//need to log with logger
 		        }
