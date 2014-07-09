@@ -87,7 +87,7 @@ public class OperationControllerTest {
 		LessonTimeDTO lessonTimeResult = controller.getLessonTime(lessonId);
 		assertEquals(lessonTimeResult, lessonTimeDTO);
 	}
-
+	
 	private LessonTimeDTO prepareLessonTime(){
 		LessonTimeDTO lessonTimeMerge = new LessonTimeDTO();
 		lessonTimeMerge.setLessonNumber(2);

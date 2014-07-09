@@ -20,7 +20,7 @@ public class SessionComponent {
 	private SessionGenerator sessionGenerator;
 	@Autowired
 	private SessionDAO sessionDao;
-	
+
 	public void init(){
 		if(!isNeedToInitialize()){
 			timeThread = new TimeThread();
@@ -55,6 +55,16 @@ public class SessionComponent {
 
 	public void setGetSessionThread(Thread getSessionThread) {
 		this.getSessionThread = getSessionThread;
+	}
+	
+	public Boolean sessionActivityUpdate(String sessionValue){
+		UserSession userSession = sessionDao.getUserSessionByValue(sessionValue);
+		if(userSession.isActive()){
+			userSession.setLastActivity(System.currentTimeMillis());
+			sessionDao.updateUserSession(userSession);
+			return true;
+		}		
+		return false;
 	}
 
 	class TimeThread implements Runnable{
