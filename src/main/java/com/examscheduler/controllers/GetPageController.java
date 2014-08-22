@@ -50,7 +50,15 @@ public class GetPageController {
 	}
 	
 	@RequestMapping(value="/secured/lessontime", method=RequestMethod.GET)
-	public String getLessonTimePage(){
+	public String getLessonTimePage(HttpServletRequest request, ModelMap model){
+		String sessionCookie = cookieHelper.getSessionCookie(request);
+		//need to check session for expiration
+		model.addAttribute(USER_SESSION_PARAM, sessionCookie);
+		
+		UserDetails userDetails = userDetailService.getUserDetailsBySession(sessionCookie);
+		if(userDetails!=null){
+			model.addAttribute(USER_NAME_PARAM, userDetails.getUsername());
+		}
 		return "lessonTime";
 	}
 	

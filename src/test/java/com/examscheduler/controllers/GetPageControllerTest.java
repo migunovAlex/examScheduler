@@ -75,7 +75,12 @@ public class GetPageControllerTest {
 	
 	@Test
 	public void shouldGetLessonTimePage(){
-		assertEquals(controller.getLessonTimePage(), "lessonTime");
+		when(cookieHelper.getSessionCookie(request)).thenReturn(FAKE_SESSION);
+		when(userDetailService.getUserDetailsBySession(FAKE_SESSION)).thenReturn(userDetails);
+		when(userDetails.getUsername()).thenReturn(TEST_USERNAME);
+		assertEquals(controller.getLessonTimePage(request, modelMap), "lessonTime");
+		verify(modelMap, times(1)).addAttribute("userSession", FAKE_SESSION);
+		verify(modelMap, times(1)).addAttribute(GetPageController.USER_NAME_PARAM, TEST_USERNAME);
 	}
 
 	@Test
