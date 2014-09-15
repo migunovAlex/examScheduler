@@ -6,6 +6,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="../../../css/jquery-ui-1.9.0.custom.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/lessonsTime.css" />
 <title>Lesson Time</title>
 </head>
 <body>
@@ -14,9 +16,8 @@
 	<c:if test="${userSession!=null}">
 		<jsp:include page="informationBlock.jsp" />
 		<jsp:include page="mainPageMenu.jsp" />
-		<h1>Lesson Time</h1>
 		<div id="lessons-time-table">
-			<div id="jqLessonsTimeGrid">
+			<div id="jqLessonsTimeGrid" class="centered-div">
 				<table id="lessonsTime"></table>
 				<div id="lessonsTimePager"></div>
 			</div>
