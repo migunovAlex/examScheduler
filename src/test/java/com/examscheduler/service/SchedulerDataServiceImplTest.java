@@ -15,11 +15,14 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.entity.LessonsTime;
 import com.examscheduler.persistence.PersistenceDAO;
 
 public class SchedulerDataServiceImplTest {
 	
+	private static final String TIME_END = "09:30";
+	private static final String TIME_START = "08:00";
 	private SchedulerDataServiceImpl schedulerDataService;
 	private static final Integer lessonId = 1;
 	
@@ -92,7 +95,8 @@ public class SchedulerDataServiceImplTest {
 		listLessonTime.add(loadLessonsTime());
 		
 		when(persistenceDao.getListLessonTime()).thenReturn(listLessonTime);
-		List<LessonTimeDTO> listLessonTimeDTO = schedulerDataService.getListLessonTime();
+		LessonsTimeListSummary lessonsTimeSummary = schedulerDataService.getListLessonTime();
+		List<LessonTimeDTO> listLessonTimeDTO = lessonsTimeSummary.getLessonsTimeList();
 		
 		assertNotNull(listLessonTimeDTO);
 		assertEquals(listLessonTimeDTO.size(), listLessonTime.size());
@@ -115,8 +119,8 @@ public class SchedulerDataServiceImplTest {
 		LessonTimeDTO lessonTimeResult = new LessonTimeDTO();
 		lessonTimeResult.setId(5);
 		lessonTimeResult.setLessonNumber(5);
-		lessonTimeResult.setTimeStart(1234567890L);
-		lessonTimeResult.setTimeEnd(2345678910L);
+		lessonTimeResult.setTimeStart(TIME_START);
+		lessonTimeResult.setTimeEnd(TIME_END);
 		return lessonTimeResult;
 	}
 	
@@ -124,8 +128,8 @@ public class SchedulerDataServiceImplTest {
 		LessonsTime lessonTimeResult = new LessonsTime();
 		lessonTimeResult.setId(5);
 		lessonTimeResult.setLessonNumber(5);
-		lessonTimeResult.setTimeStart(1234567890L);
-		lessonTimeResult.setTimeEnd(2345678910L);
+		lessonTimeResult.setTimeStart(TIME_START);
+		lessonTimeResult.setTimeEnd(TIME_END);
 		return lessonTimeResult;
 	}
 	

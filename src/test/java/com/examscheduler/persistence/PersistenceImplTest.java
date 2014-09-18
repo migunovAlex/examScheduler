@@ -25,6 +25,12 @@ import com.examscheduler.entity.LessonsTime;
 
 public class PersistenceImplTest {
 	
+	private static final int ZERO_LENGTH = 0;
+
+	private static final String TIME_END = "09:30";
+
+	private static final String TIME_START = "08:00";
+
 	private PersistenceImpl persistence;
 
 	@Mock
@@ -122,15 +128,16 @@ public class PersistenceImplTest {
 		when(session.createCriteria(any(Class.class))).thenReturn(criteria);
 		doThrow(new HibernateException("Can not get list of LessonsTime")).when(criteria).list();
 		List <LessonsTime> listResult = persistence.getListLessonTime();
-		assertEquals(listResult, null);
+		assertNotNull(listResult);
+		assertEquals(ZERO_LENGTH, listResult.size());
 	}
 	
 	public LessonsTime getLessonsTimeClass(int id){
 		LessonsTime lessonTime = new LessonsTime();
 		lessonTime.setId(id);
 		lessonTime.setLessonNumber(5);
-		lessonTime.setTimeStart(1234567890L);
-		lessonTime.setTimeEnd(2345678910L);
+		lessonTime.setTimeStart(TIME_START);
+		lessonTime.setTimeEnd(TIME_END);
 		return lessonTime;
 	}
 	
@@ -163,15 +170,14 @@ public class PersistenceImplTest {
 		assertEquals(resultDelete, false);
 	}
 	
-	/*
-	 *@Test
-	  public void shouldLoadLessonsTime(){
-		LessonsTime lessonsTime = getLessonsTimeClass(12);
-		when(session.load(LessonsTime.class, 12)).thenReturn(lessonsTime);
-		LessonsTime resultLoad = persistence.loadLessonsTime(12);
-		assertEquals(resultLoad, lessonsTime);
+	 @Test
+	  public void shouldReturnEmptyList(){
+		when(session.createCriteria(any(Class.class))).thenReturn(criteria);
+		when(criteria.list()).thenReturn(null);
+		List<LessonsTime> resultList = persistence.getListLessonTime();
+		assertNotNull(resultList);
+		assertEquals(0, resultList.size());
 	}
-	 */
 	
 	@Test
 	public void shouldLoadAuditorie(){
@@ -212,7 +218,6 @@ public class PersistenceImplTest {
 		List<Auditorie> resultList = persistence.getListAuditorie();
 		assertNotNull(resultList);
 		assertEquals(resultList.size(), listAuditorie.size());
-		System.out.println("result list: " + resultList.size());
 		assertEquals(resultList.get(0).getId(), listAuditorie.get(0).getId());
 		assertEquals(resultList.get(0).getAudNumber(), listAuditorie.get(0).getAudNumber());
 		assertEquals(resultList.get(0).getMaxPerson(), listAuditorie.get(0).getMaxPerson());

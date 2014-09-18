@@ -31,12 +31,9 @@ public class UserDAOImpl implements UserDao {
 		return users.get(0);
 	}
 	
-	@SuppressWarnings("unchecked")
 	public DbUser getUserBySessionValue(String sessionValue){
-		List<UserSession> userSessionList = currentSession().createCriteria(UserSession.class).add(Restrictions.eq("sessionValue", sessionValue)).list();
-		if(userSessionList.size() == 0) return null;
-		UserSession userSession = userSessionList.get(0);
-		Hibernate.initialize(userSession.getUser());
+		UserSession userSession = getSession(sessionValue);
+		if(userSession == null) return null;
 		return userSession.getUser();
 	}
 	
@@ -46,6 +43,20 @@ public class UserDAOImpl implements UserDao {
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+
+	public UserSession getUserSession(String sessionValue) {
+		return getSession(sessionValue);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private UserSession getSession(String sessionValue){
+		List<UserSession> userSessionList = currentSession().createCriteria(UserSession.class).add(Restrictions.eq("sessionValue", sessionValue)).list();
+		if(userSessionList.size() == 0) return null;
+		UserSession userSession = userSessionList.get(0);
+		Hibernate.initialize(userSession.getUser());
+		return userSession;
+		
 	}
 	
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.entity.LessonsTime;
 import com.examscheduler.persistence.PersistenceDAO;
 
@@ -55,8 +56,8 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 		return delLessonTime;
 	}
 
-	public List<LessonTimeDTO> getListLessonTime() {
-
+	public LessonsTimeListSummary getListLessonTime() {
+		LessonsTimeListSummary result = new LessonsTimeListSummary();
 		List<LessonsTime> listLessonTime = persistenceDao.getListLessonTime();
 		List<LessonTimeDTO> listLessonTimeDTO = new ArrayList<LessonTimeDTO>();
 		for(int i=0; i<listLessonTime.size(); i++){
@@ -67,7 +68,8 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 			lessonTimeDTO.setTimeEnd(listLessonTime.get(i).getTimeEnd());
 			listLessonTimeDTO.add(lessonTimeDTO);
 		}
-		return listLessonTimeDTO;
+		result.setLessonsTimeList(listLessonTimeDTO);
+		return result;
 	}
 
 	public LessonTimeDTO loadLessonTime(Integer lessonTimeId) {

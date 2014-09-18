@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.examscheduler.security.persistence.UserDao;
 import com.examscheduler.security.persistence.entity.DbUser;
+import com.examscheduler.security.persistence.entity.UserSession;
 
 @SuppressWarnings("deprecation")
 public class UserDetailService implements UserDetailsService{
@@ -54,6 +55,12 @@ public class UserDetailService implements UserDetailsService{
 				true,
 				getAuthorities(foundUser.getAccess()));
 		return user;
+	}
+	
+	public boolean isUserStillLoggedIn(String sessionValue){
+		UserSession userSession = userDao.getUserSession(sessionValue);
+		if(userSession == null) return false;
+		return userSession.isActive();
 	}
 
 	private Collection<GrantedAuthority> getAuthorities(Integer access) {

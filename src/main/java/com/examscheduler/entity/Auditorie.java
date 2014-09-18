@@ -40,5 +40,11 @@ public class Auditorie {
 	public void setMaxPerson(int maxPerson) {
 		this.maxPerson = maxPerson;
 	}
+	@Override
+	public String toString() {
+		return "ID - " + id + "; auditory number - " + audNumber + "; maxPersons - " + maxPerson;
+	}
+	
+	
 	
 }

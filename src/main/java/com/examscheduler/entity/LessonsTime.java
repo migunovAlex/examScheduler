@@ -21,10 +21,10 @@ public class LessonsTime {
 	private int lessonNumber;
 	
 	@Column(name="TIME_START_MINUTES")
-	private Long timeStart;
+	private String timeStart;
 	
 	@Column(name="TIME_END_MINUTES")
-	private Long timeEnd;
+	private String timeEnd;
 	
 	public int getId() {
 		return id;
@@ -38,16 +38,16 @@ public class LessonsTime {
 	public void setLessonNumber(int lessonNumber) {
 		this.lessonNumber = lessonNumber;
 	}
-	public Long getTimeStart() {
+	public String getTimeStart() {
 		return timeStart;
 	}
-	public void setTimeStart(Long timeStart) {
+	public void setTimeStart(String timeStart) {
 		this.timeStart = timeStart;
 	}
-	public Long getTimeEnd() {
+	public String getTimeEnd() {
 		return timeEnd;
 	}
-	public void setTimeEnd(Long timeEnd) {
+	public void setTimeEnd(String timeEnd) {
 		this.timeEnd = timeEnd;
 	}
 	

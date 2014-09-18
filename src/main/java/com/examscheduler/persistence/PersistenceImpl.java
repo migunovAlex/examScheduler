@@ -1,7 +1,9 @@
 package com.examscheduler.persistence;
 
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -17,6 +19,8 @@ public class PersistenceImpl implements PersistenceDAO {
 
 	@Autowired
 	private SessionFactory sessionFactory;
+	
+	Logger logger = Logger.getLogger(PersistenceImpl.class);
 
 	private Session currentSession(){
 		return getSessionFactory().getCurrentSession();
@@ -34,7 +38,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().save(auditorie);
 		}catch(HibernateException e){
-//			e.printStackTrace();
+			logger.error("Error while saving auditorie - " + auditorie, e);
 			return false;
 		}
 		return true;
@@ -44,7 +48,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().delete(auditorie);
 		}catch(HibernateException e){
-			//e.printStackTrace();
+			logger.error("Error while deleting auditorie - " + auditorie, e);
 			return false;
 		}
 		return true;
@@ -54,7 +58,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().update(auditorie);
 		}catch(HibernateException e){
-//			e.printStackTrace();
+			logger.error("Error while updating auditorie - " + auditorie, e);
 			return false;
 		}
 		return true;
@@ -66,7 +70,7 @@ public class PersistenceImpl implements PersistenceDAO {
 			auditorie = (Auditorie) currentSession().load(Auditorie.class, auditorieId);
 			Hibernate.initialize(auditorie);
 		}catch(HibernateException e){
-//			e.printStackTrace();
+			logger.error("Error while loading auditorie - " + auditorie, e);
 		}
 		return auditorie;
 	}
@@ -77,7 +81,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			listAuditorie = currentSession().createCriteria(Auditorie.class).list();
 		}catch(HibernateException e){
-//			e.printStackTrace();
+			logger.error("Error while loading list of auditories", e);
 		}
 		return listAuditorie;
 	}
@@ -86,6 +90,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().save(lessonsTime);
 		}catch(HibernateException e){
+			logger.error("Error while creating lessonsTime - " + lessonsTime, e);
 			return false;
 		}
 		return true;
@@ -95,6 +100,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().delete(lessonsTime);
 		}catch(HibernateException e){
+			logger.error("Exception while deleting LessonsTime - " + lessonsTime);
 			return false;
 		}
 		return true;
@@ -104,6 +110,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			currentSession().update(lessonsTime);
 		}catch(HibernateException e){
+			logger.error("Exception while updating LessonsTime - " + lessonsTime);
 			return false;
 		}
 		return true;
@@ -115,7 +122,7 @@ public class PersistenceImpl implements PersistenceDAO {
 			lessonsTime = (LessonsTime) currentSession().load(LessonsTime.class, lessonsTimeId);
 			Hibernate.initialize(lessonsTime);
 		}catch(HibernateException e){
-//			e.printStackTrace();
+			logger.error("Exception while getting LessonsTime with ID - " + lessonsTimeId);
 		}
 		return lessonsTime;
 	}
@@ -126,8 +133,10 @@ public class PersistenceImpl implements PersistenceDAO {
 		try{
 			listLessonTime = currentSession().createCriteria(LessonsTime.class).list();
 		}catch(HibernateException e){
-//			e.printStackTrace();
+			logger.error("Exception while getting List of LessonsTime");
 		}
+		if(listLessonTime == null)
+			return Collections.EMPTY_LIST;
 		return listLessonTime;
 	}
 	

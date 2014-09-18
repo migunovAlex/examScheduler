@@ -5,30 +5,47 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
 
 import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.dto.summary.LessonsTimeListSummary;
+import com.examscheduler.security.service.UserDetailService;
 import com.examscheduler.service.SchedulerDataService;
 
 public class OperationControllerTest {
 	
-	private OperationController controller;
+	private static final String TIME_END = "09:30";
+	private static final String TIME_START = "08:00";
+	private static final String FAKE_SESSION = "FAKE_SESSION";
 	private static final Integer lessonId = 10;
+	
+	private OperationController controller;
 	private LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
 	
 	@Mock
 	private SchedulerDataService schedulerService;
+	@Mock
+	private HttpServletRequest request;
+	@Mock
+	private CookieHelper cookieHelper;
+	@Mock
+	private UserDetailService userDetailService;
 	
 	@Before
 	public void setUp(){
 		MockitoAnnotations.initMocks(this);
 		controller = new OperationController();
 		controller.setServiceDataScheduler(schedulerService);
+		controller.setCookieHelper(cookieHelper);
+		controller.setUserDetailService(userDetailService);
 	}
 
 	@Test
@@ -75,11 +92,15 @@ public class OperationControllerTest {
 	
 	@Test
 	public void shouldGetListLessonTime(){
+		when(cookieHelper.getSessionCookie(request)).thenReturn(FAKE_SESSION);
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.TRUE);
+		LessonsTimeListSummary result = new LessonsTimeListSummary();
 		List<LessonTimeDTO> listLessonTime = new ArrayList<LessonTimeDTO>();
 		listLessonTime.add(prepareLessonTime());
-		when(schedulerService.getListLessonTime()).thenReturn(listLessonTime);
-		List<LessonTimeDTO> listResult = controller.getListLessonTime();
-		assertEquals(listResult, listLessonTime);
+		result.setLessonsTimeList(listLessonTime);
+		when(schedulerService.getListLessonTime()).thenReturn(result);
+		LessonsTimeListSummary listResult = controller.getListLessonTime(request);
+		assertEquals(result, listResult);
 	}
 	@Test
 	public void shouldGetLessonTime(){
@@ -91,8 +112,8 @@ public class OperationControllerTest {
 	private LessonTimeDTO prepareLessonTime(){
 		LessonTimeDTO lessonTimeMerge = new LessonTimeDTO();
 		lessonTimeMerge.setLessonNumber(2);
-		lessonTimeMerge.setTimeStart(1234567890L);
-		lessonTimeMerge.setTimeEnd(2345678910L);
+		lessonTimeMerge.setTimeStart(TIME_START);
+		lessonTimeMerge.setTimeEnd(TIME_END);
 		return lessonTimeMerge;
 	}
 

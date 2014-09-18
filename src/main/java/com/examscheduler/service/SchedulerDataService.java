@@ -1,8 +1,7 @@
 package com.examscheduler.service;
 
-import java.util.List;
-
 import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.dto.summary.LessonsTimeListSummary;
 
 public interface SchedulerDataService {
 	
@@ -12,7 +11,7 @@ public interface SchedulerDataService {
 
 	public Boolean deleteLessonTime(Integer lessonTimeId);
 
-	public List<LessonTimeDTO> getListLessonTime();
+	public LessonsTimeListSummary getListLessonTime();
 
 	public LessonTimeDTO loadLessonTime(Integer lessonTimeId);
 	

@@ -4,8 +4,8 @@ public class LessonTimeDTO {
 
 	private Integer id;
 	private int lessonNumber;
-	private Long timeStart;
-	private Long timeEnd;
+	private String timeStart;
+	private String timeEnd;
 	
 	
 	public Integer getId() {
@@ -20,16 +20,16 @@ public class LessonTimeDTO {
 	public void setLessonNumber(int lessonNumber) {
 		this.lessonNumber = lessonNumber;
 	}
-	public Long getTimeStart() {
+	public String getTimeStart() {
 		return timeStart;
 	}
-	public void setTimeStart(Long timeStart) {
+	public void setTimeStart(String timeStart) {
 		this.timeStart = timeStart;
 	}
-	public Long getTimeEnd() {
+	public String getTimeEnd() {
 		return timeEnd;
 	}
-	public void setTimeEnd(Long timeEnd) {
+	public void setTimeEnd(String timeEnd) {
 		this.timeEnd = timeEnd;
 	}
 	
