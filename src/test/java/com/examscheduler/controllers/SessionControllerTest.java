@@ -51,6 +51,7 @@ public class SessionControllerTest {
 
 	private OperationResultSummary generateOperationResultSummary() {
 		OperationResultSummary result = new OperationResultSummary();
+		result.setOperationResult(Boolean.TRUE);
 		return result;
 	}
 

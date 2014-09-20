@@ -167,6 +167,7 @@ public class SessionServiceImpl implements SessionService {
 			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_EXECUTE_OPERATION_MESSAGE);
 			return result;
 		}
+		result.setOperationResult(Boolean.TRUE);
 		return result;
 	}
 

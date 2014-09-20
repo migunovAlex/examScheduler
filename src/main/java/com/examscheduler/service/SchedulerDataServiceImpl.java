@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.examscheduler.dto.AuditoryDTO;
 import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.dto.summary.AbstractSummary;
 import com.examscheduler.dto.summary.AuditoryListSummary;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.entity.Auditory;
@@ -29,7 +30,9 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		this.persistenceDao = persistenceDao;
 	}
 
-	public OperationResultSummary createLessonTime(LessonTimeDTO lessonTimeDTO) {
+	public AbstractSummary createLessonTime(LessonTimeDTO lessonTimeDTO) {
+		if(lessonTimeDTO==null)
+			throw new IllegalArgumentException("Lessons Time is null");
 		LessonsTime lessonTime = new LessonsTime();
 		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
 		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());

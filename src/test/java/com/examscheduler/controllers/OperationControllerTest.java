@@ -16,9 +16,11 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
 
 import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.dto.summary.AbstractSummary;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.security.service.UserDetailService;
 import com.examscheduler.service.SchedulerDataService;
+import com.examscheduler.summary.OperationResultSummary;
 
 public class OperationControllerTest {
 	
@@ -46,20 +48,35 @@ public class OperationControllerTest {
 		controller.setServiceDataScheduler(schedulerService);
 		controller.setCookieHelper(cookieHelper);
 		controller.setUserDetailService(userDetailService);
+		when(cookieHelper.getSessionCookie(request)).thenReturn(FAKE_SESSION);
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.TRUE);
 	}
 
 	@Test
 	public void shouldCreateLessonTime(){
-		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(true);
-		Boolean result = controller.createLessonsTime(prepareLessonTime());
-		assertEquals(result, true);
+		OperationResultSummary result = new OperationResultSummary();
+		result.setOperationResult(Boolean.TRUE);
+		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(result);
+		AbstractSummary operationResult = controller.createLessonsTime(request, prepareLessonTime());
+		assertEquals(result, operationResult);
 	}
 	
 	@Test
-	public void shouldCreateLessonTimeFalse(){
-		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(false);
-		Boolean result = controller.createLessonsTime(prepareLessonTime());
-		assertEquals(result, false);
+	public void shouldNotCreateLessonTimeWherUserIsNotLoggedIn(){
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
+		OperationResultSummary result = new OperationResultSummary();
+		result.setOperationResult(Boolean.TRUE);
+		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(result);
+		OperationResultSummary operationResult = (OperationResultSummary) controller.createLessonsTime(request, prepareLessonTime());
+		assertEquals(Boolean.FALSE, operationResult.isOperationResult());
+	}
+	
+	@Test
+	public void shouldNotCreateLessonTime(){
+		OperationResultSummary result = new OperationResultSummary();
+		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(result);
+		AbstractSummary operationResult = schedulerService.createLessonTime(prepareLessonTime());
+		assertEquals(result, operationResult);
 	}
 	
 	@Test
@@ -92,16 +109,24 @@ public class OperationControllerTest {
 	
 	@Test
 	public void shouldGetListLessonTime(){
-		when(cookieHelper.getSessionCookie(request)).thenReturn(FAKE_SESSION);
-		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.TRUE);
 		LessonsTimeListSummary result = new LessonsTimeListSummary();
 		List<LessonTimeDTO> listLessonTime = new ArrayList<LessonTimeDTO>();
 		listLessonTime.add(prepareLessonTime());
 		result.setLessonsTimeList(listLessonTime);
 		when(schedulerService.getListLessonTime()).thenReturn(result);
-		LessonsTimeListSummary listResult = controller.getListLessonTime(request);
+		AbstractSummary listResult = controller.getListLessonTime(request);
 		assertEquals(result, listResult);
 	}
+	
+	@Test
+	public void shouldNotGetLessonTimeListWherUserIsNotLoggedIn(){
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
+		OperationResultSummary result = new OperationResultSummary();
+		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(result);
+		LessonsTimeListSummary operationResult = (LessonsTimeListSummary) controller.getListLessonTime(request);
+		assertEquals(null, operationResult.getLessonsTimeList());
+	}
+	
 	@Test
 	public void shouldGetLessonTime(){
 		when(schedulerService.loadLessonTime(lessonId)).thenReturn(lessonTimeDTO);

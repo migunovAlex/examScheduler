@@ -30,7 +30,10 @@ public class OperationController {
 	private CookieHelper cookieHelper;
 	
 	@RequestMapping(value="/classtime/new", method=RequestMethod.POST)
-	public @ResponseBody OperationResultSummary createLessonsTime(@RequestBody LessonTimeDTO lessonTime){
+	public @ResponseBody AbstractSummary createLessonsTime(HttpServletRequest request, @RequestBody LessonTimeDTO lessonTime){
+		if (!checkUserIsStillLoggedIn(request)){
+			return generateExpiredSessionMessage(new OperationResultSummary());
+		}
 		return schedulerDataService.createLessonTime(lessonTime);
 	}
 	

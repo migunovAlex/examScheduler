@@ -15,6 +15,9 @@ public class CookieHelper {
 	
 	private Cookie getCookie(String cookieName, HttpServletRequest request){
 		Cookie[] cookies = request.getCookies();
+		if(cookies==null){
+			return null;
+		}
 		for(Cookie cookie : cookies){
 			if(cookie.getName().equals(cookieName)){
 				return cookie;

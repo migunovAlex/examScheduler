@@ -18,6 +18,7 @@ import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.entity.LessonsTime;
 import com.examscheduler.persistence.PersistenceDAO;
+import com.examscheduler.summary.OperationResultSummary;
 
 public class SchedulerDataServiceImplTest {
 	
@@ -40,8 +41,8 @@ public class SchedulerDataServiceImplTest {
 	@Test
 	public void shouldCreateLessonTime(){
 		when(persistenceDao.createLessonsTime(any(LessonsTime.class))).thenReturn(true);
-		Boolean lessonTimeCreate = schedulerDataService.createLessonTime(prepareLessonsTime());
-		assertEquals(lessonTimeCreate, true);
+		OperationResultSummary lessonTimeCreate = (OperationResultSummary) schedulerDataService.createLessonTime(prepareLessonsTime());
+		assertEquals(Boolean.TRUE, lessonTimeCreate.isOperationResult());
 	}
 	
 	@Test

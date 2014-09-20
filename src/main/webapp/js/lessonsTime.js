@@ -35,10 +35,8 @@
 			loadonce:false,
 			loadcomplete:function(){},
 			jsonReader:{
-				root:"",
+				root:"lessonsTimeList",
 				page:"page",
-				total:"total",
-				records:"records",
 				repeatitems:false,
 				cell:"cell",
 				id:"id"
