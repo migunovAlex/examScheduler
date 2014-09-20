@@ -1,28 +1,19 @@
 package com.examscheduler.summary;
 
-import com.examscheduler.dto.ErrorData;
+import com.examscheduler.dto.summary.AbstractSummary;
 
-public class OperationResultSummary {
+public class OperationResultSummary extends AbstractSummary{
 	
-	private boolean operationResult;
-	private ErrorData errorData;
+	private boolean operationResult = false;
 	
 	public OperationResultSummary(){
-		errorData = new ErrorData();
-		operationResult = true;
-	}
-	
-	public ErrorData getErrorData() {
-		return errorData;
-	}
-
-	public void setErrorData(ErrorData errorData) {
-		this.errorData = errorData;
+		super();
 	}
 	
 	public boolean isOperationResult() {
 		return operationResult;
 	}
+	
 	public void setOperationResult(boolean operationResult) {
 		this.operationResult = operationResult;
 	}

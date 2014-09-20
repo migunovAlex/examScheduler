@@ -6,14 +6,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.examscheduler.dto.AuditoryDTO;
 import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.dto.summary.AuditoryListSummary;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;
+import com.examscheduler.entity.Auditory;
 import com.examscheduler.entity.LessonsTime;
 import com.examscheduler.persistence.PersistenceDAO;
+import com.examscheduler.summary.OperationResultSummary;
 
 @Component
-public class SchedulerDataServiceImpl implements SchedulerDataService{
-	
+public class SchedulerDataServiceImpl implements SchedulerDataService {
+
 	@Autowired
 	private PersistenceDAO persistenceDao;
 
@@ -25,32 +29,35 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 		this.persistenceDao = persistenceDao;
 	}
 
-	public Boolean createLessonTime(LessonTimeDTO lessonTimeDTO) {
+	public OperationResultSummary createLessonTime(LessonTimeDTO lessonTimeDTO) {
 		LessonsTime lessonTime = new LessonsTime();
 		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
 		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
 		lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
-		Boolean createLessonTime = persistenceDao.createLessonsTime(lessonTime);
-		return createLessonTime;
+		OperationResultSummary operationResult = new OperationResultSummary();
+		operationResult.setOperationResult(persistenceDao
+				.createLessonsTime(lessonTime));
+		return operationResult;
 	}
 
 	public LessonTimeDTO updateLessonTime(LessonTimeDTO lessonTimeDTO) {
-		
-		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeDTO.getId());
+
+		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeDTO
+				.getId());
 		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
 		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
 		lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
 		Boolean updLessonTime = persistenceDao.updateLessonsTime(lessonTime);
-		
-		if(updLessonTime==true){
+
+		if (updLessonTime == true) {
 			return lessonTimeDTO;
 		}
-		
+
 		return null;
 	}
 
 	public Boolean deleteLessonTime(Integer lessonTimeId) {
-		
+
 		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
 		Boolean delLessonTime = persistenceDao.deleteLessonsTime(lessonTime);
 		return delLessonTime;
@@ -60,10 +67,11 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 		LessonsTimeListSummary result = new LessonsTimeListSummary();
 		List<LessonsTime> listLessonTime = persistenceDao.getListLessonTime();
 		List<LessonTimeDTO> listLessonTimeDTO = new ArrayList<LessonTimeDTO>();
-		for(int i=0; i<listLessonTime.size(); i++){
+		for (int i = 0; i < listLessonTime.size(); i++) {
 			LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
 			lessonTimeDTO.setId(listLessonTime.get(i).getId());
-			lessonTimeDTO.setLessonNumber(listLessonTime.get(i).getLessonNumber());
+			lessonTimeDTO.setLessonNumber(listLessonTime.get(i)
+					.getLessonNumber());
 			lessonTimeDTO.setTimeStart(listLessonTime.get(i).getTimeStart());
 			lessonTimeDTO.setTimeEnd(listLessonTime.get(i).getTimeEnd());
 			listLessonTimeDTO.add(lessonTimeDTO);
@@ -74,7 +82,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 
 	public LessonTimeDTO loadLessonTime(Integer lessonTimeId) {
 		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
-		if(lessonTime!=null){
+		if (lessonTime != null) {
 			LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
 			lessonTimeDTO.setId(lessonTime.getId());
 			lessonTimeDTO.setLessonNumber(lessonTime.getLessonNumber());
@@ -84,5 +92,53 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 		}
 		return null;
 	}
-	
+
+	public OperationResultSummary createAuditory(AuditoryDTO auditoryDTO) {
+		if (auditoryDTO == null)
+			throw new IllegalArgumentException("Auditory is null");
+		Auditory auditory = new Auditory();
+		auditory.setAudNumber(auditoryDTO.getAudNumber());
+		auditory.setMaxPerson(auditoryDTO.getMaxPerson());
+		boolean isAuditoryCreated = persistenceDao.createAuditories(auditory);
+		OperationResultSummary result = new OperationResultSummary();
+		result.setOperationResult(isAuditoryCreated);
+		return result;
+	}
+
+	public OperationResultSummary updateAuditory(AuditoryDTO auditoryDTO) {
+		if(auditoryDTO == null)
+			throw new IllegalArgumentException("Auditory is null");
+		Auditory auditory = persistenceDao.loadAuditorie(auditoryDTO.getId());
+		auditory.setAudNumber(auditoryDTO.getAudNumber());
+		auditory.setMaxPerson(auditory.getMaxPerson());
+		boolean isAuditoryUpdate = persistenceDao.updateAuditories(auditory);
+		OperationResultSummary result = new OperationResultSummary();
+		result.setOperationResult(isAuditoryUpdate);
+		return result;
+	}
+
+	public OperationResultSummary deleteAuditory(Integer auditoryId) {
+		if (auditoryId == null)
+			throw new IllegalArgumentException("Auditory Id is null");
+		boolean isAuditoryDelete = persistenceDao.deleteAuditories(persistenceDao.loadAuditorie(auditoryId));
+		OperationResultSummary result = new OperationResultSummary();
+		result.setOperationResult(isAuditoryDelete);
+		return result;
+	}
+
+	public AuditoryListSummary getListAuditory() {
+		AuditoryListSummary result = new AuditoryListSummary();
+		List<Auditory> auditoryList = persistenceDao.getAuditory();
+		List<AuditoryDTO> auditoryDTOList = new ArrayList<AuditoryDTO>();
+		for(int i=0;i<auditoryList.size();i++){
+			AuditoryDTO auditoryDTO = new AuditoryDTO();
+			auditoryDTO.setId(auditoryList.get(i).getId());
+			auditoryDTO.setAudNumber(auditoryList.get(i).getAudNumber());
+			auditoryDTO.setMaxPerson(auditoryList.get(i).getMaxPerson());
+			auditoryDTOList.add(auditoryDTO);
+		}
+		
+		result.setAuditoryList(auditoryDTOList);
+		return result;
+	}
 }

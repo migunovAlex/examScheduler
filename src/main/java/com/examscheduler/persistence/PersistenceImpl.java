@@ -11,7 +11,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.examscheduler.entity.Auditorie;
+import com.examscheduler.entity.Auditory;
 import com.examscheduler.entity.LessonsTime;
 
 @Transactional
@@ -34,7 +34,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public boolean createAuditories(Auditorie auditorie) {
+	public boolean createAuditories(Auditory auditorie) {
 		try{
 			currentSession().save(auditorie);
 		}catch(HibernateException e){
@@ -44,7 +44,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		return true;
 	}
 
-	public boolean deleteAuditories(Auditorie auditorie) {
+	public boolean deleteAuditories(Auditory auditorie) {
 		try{
 			currentSession().delete(auditorie);
 		}catch(HibernateException e){
@@ -54,7 +54,7 @@ public class PersistenceImpl implements PersistenceDAO {
 		return true;
 	}
 
-	public boolean updateAuditories(Auditorie auditorie) {
+	public boolean updateAuditories(Auditory auditorie) {
 		try{
 			currentSession().update(auditorie);
 		}catch(HibernateException e){
@@ -64,10 +64,10 @@ public class PersistenceImpl implements PersistenceDAO {
 		return true;
 	}
 
-	public Auditorie loadAuditorie(Integer auditorieId) {
-		Auditorie auditorie = null;
+	public Auditory loadAuditorie(Integer auditorieId) {
+		Auditory auditorie = null;
 		try{
-			auditorie = (Auditorie) currentSession().load(Auditorie.class, auditorieId);
+			auditorie = (Auditory) currentSession().load(Auditory.class, auditorieId);
 			Hibernate.initialize(auditorie);
 		}catch(HibernateException e){
 			logger.error("Error while loading auditorie - " + auditorie, e);
@@ -76,10 +76,10 @@ public class PersistenceImpl implements PersistenceDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Auditorie> getListAuditorie(){
-		List<Auditorie> listAuditorie = null;
+	public List<Auditory> getListAuditorie(){
+		List<Auditory> listAuditorie = null;
 		try{
-			listAuditorie = currentSession().createCriteria(Auditorie.class).list();
+			listAuditorie = currentSession().createCriteria(Auditory.class).list();
 		}catch(HibernateException e){
 			logger.error("Error while loading list of auditories", e);
 		}
@@ -138,6 +138,11 @@ public class PersistenceImpl implements PersistenceDAO {
 		if(listLessonTime == null)
 			return Collections.EMPTY_LIST;
 		return listLessonTime;
+	}
+
+	public List<Auditory> getAuditory() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -2,16 +2,14 @@ package com.examscheduler.dto.summary;
 
 import java.util.List;
 
-import com.examscheduler.dto.ErrorData;
 import com.examscheduler.dto.LessonTimeDTO;
 
-public class LessonsTimeListSummary {
+public class LessonsTimeListSummary extends AbstractSummary{
 	
 	private List<LessonTimeDTO> lessonsTimeList;
-	private ErrorData errorData;
 	
 	public LessonsTimeListSummary(){
-		errorData = new ErrorData();
+		super();
 	}
 	
 	public List<LessonTimeDTO> getLessonsTimeList() {
@@ -19,12 +17,6 @@ public class LessonsTimeListSummary {
 	}
 	public void setLessonsTimeList(List<LessonTimeDTO> lessonsTimeList) {
 		this.lessonsTimeList = lessonsTimeList;
-	}
-	public ErrorData getErrorData() {
-		return errorData;
-	}
-	public void setErrorData(ErrorData errorData) {
-		this.errorData = errorData;
 	}
 	
 }

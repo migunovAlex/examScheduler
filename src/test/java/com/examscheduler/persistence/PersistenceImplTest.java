@@ -20,7 +20,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 
-import com.examscheduler.entity.Auditorie;
+import com.examscheduler.entity.Auditory;
 import com.examscheduler.entity.LessonsTime;
 
 public class PersistenceImplTest {
@@ -143,21 +143,21 @@ public class PersistenceImplTest {
 	
 	@Test
 	public void shouldCreateAuditorie(){
-		when(session.save(any(Auditorie.class))).thenReturn(1);
+		when(session.save(any(Auditory.class))).thenReturn(1);
 		Boolean createResult = persistence.createAuditories(getAuditorie());
 		assertEquals(createResult, true);
 	}
 	
 	@Test	
 	public void shouldCreateAuditorieException(){
-		doThrow(new HibernateException("Can not save to BD")).when(session).save(any(Auditorie.class));
+		doThrow(new HibernateException("Can not save to BD")).when(session).save(any(Auditory.class));
 		Boolean createResult = persistence.createAuditories(getAuditorie());
 		assertEquals(createResult, false);
 	}
 	
 	@Test
 	public void shouldDeleteAuditorie(){
-		Auditorie auditorie = getAuditorie();
+		Auditory auditorie = getAuditorie();
 		Boolean resultDelete = persistence.deleteAuditories(auditorie);
 		assertEquals(resultDelete, true);
 		verify(session, times(1)).delete(auditorie);
@@ -165,7 +165,7 @@ public class PersistenceImplTest {
 	
 	@Test
 	public void shouldDeleteAuditorieException(){
-		doThrow(new HibernateException("Can not delete from DB")).when(session).delete(any(Auditorie.class));
+		doThrow(new HibernateException("Can not delete from DB")).when(session).delete(any(Auditory.class));
 		Boolean resultDelete = persistence.deleteAuditories(getAuditorie());
 		assertEquals(resultDelete, false);
 	}
@@ -181,22 +181,22 @@ public class PersistenceImplTest {
 	
 	@Test
 	public void shouldLoadAuditorie(){
-		Auditorie auditorie = getAuditorie();
-		when(session.load(Auditorie.class, 1)).thenReturn(auditorie);
-		Auditorie resultLoad = persistence.loadAuditorie(1);
+		Auditory auditorie = getAuditorie();
+		when(session.load(Auditory.class, 1)).thenReturn(auditorie);
+		Auditory resultLoad = persistence.loadAuditorie(1);
 		assertEquals(resultLoad, auditorie);
 	}
 	
 	@Test
 	public void shouldLoadAuditorieException(){
-		doThrow(new HibernateException("Can not load from DB")).when(session).load(any(Auditorie.class), any(Integer.class));
-		Auditorie resultLoad = persistence.loadAuditorie(1);
+		doThrow(new HibernateException("Can not load from DB")).when(session).load(any(Auditory.class), any(Integer.class));
+		Auditory resultLoad = persistence.loadAuditorie(1);
 		assertEquals(resultLoad, null);
 	}
 
 	@Test
 	public void shouldUpdateAuditorie(){
-		Auditorie auditorie = getAuditorie();
+		Auditory auditorie = getAuditorie();
 		Boolean resultUpdate = persistence.updateAuditories(auditorie);
 		assertEquals(resultUpdate, true);
 		verify(session, times(1)).update(auditorie);
@@ -204,18 +204,18 @@ public class PersistenceImplTest {
 	
 	@Test
 	public void shouldUpdateAuditorieException(){
-		doThrow(new HibernateException("Can not update to DB")).when(session).update(any(Auditorie.class));
+		doThrow(new HibernateException("Can not update to DB")).when(session).update(any(Auditory.class));
 		Boolean resultUpdate = persistence.updateAuditories(getAuditorie());
 		assertEquals(resultUpdate,false);
 	}
 	
 	@Test 
 	public void shouldGetListAuditorie(){
-		List<Auditorie> listAuditorie = new ArrayList<Auditorie>();
+		List<Auditory> listAuditorie = new ArrayList<Auditory>();
 		listAuditorie.add(getAuditorie());
 		when(session.createCriteria(any(Class.class))).thenReturn(criteria);
 		when(criteria.list()).thenReturn(listAuditorie);
-		List<Auditorie> resultList = persistence.getListAuditorie();
+		List<Auditory> resultList = persistence.getListAuditorie();
 		assertNotNull(resultList);
 		assertEquals(resultList.size(), listAuditorie.size());
 		assertEquals(resultList.get(0).getId(), listAuditorie.get(0).getId());
@@ -227,12 +227,12 @@ public class PersistenceImplTest {
 	public void shouldGetListAuditorieException(){
 		when(session.createCriteria(any(Class.class))).thenReturn(criteria);
 		doThrow(new HibernateException("Can not get list of LessonsTime")).when(criteria).list();
-		List <Auditorie> listResult = persistence.getListAuditorie();
+		List <Auditory> listResult = persistence.getListAuditorie();
 		assertEquals(listResult, null);
 	}
 
-	private Auditorie getAuditorie() {
-		Auditorie auditorie = new Auditorie();
+	private Auditory getAuditorie() {
+		Auditory auditorie = new Auditory();
 		auditorie.setId(1);
 		auditorie.setAudNumber("01A");
 		auditorie.setMaxPerson(40);
