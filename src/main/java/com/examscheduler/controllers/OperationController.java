@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,8 +30,8 @@ public class OperationController {
 	@Autowired
 	private CookieHelper cookieHelper;
 	
-	@RequestMapping(value="/classtime/new", method=RequestMethod.POST)
-	public @ResponseBody AbstractSummary createLessonsTime(HttpServletRequest request, @RequestBody LessonTimeDTO lessonTime){
+	@RequestMapping(value="/classtime", method=RequestMethod.POST)
+	public @ResponseBody AbstractSummary createLessonsTime(HttpServletRequest request, @ModelAttribute LessonTimeDTO lessonTime){
 		if (!checkUserIsStillLoggedIn(request)){
 			return generateExpiredSessionMessage(new OperationResultSummary());
 		}
@@ -52,7 +53,7 @@ public class OperationController {
 		return schedulerDataService.loadLessonTime(lessonTimeId);
 	}
 	
-	@RequestMapping(value="/classtime/all", method=RequestMethod.POST)
+	@RequestMapping(value="/classtime", method=RequestMethod.GET)
 	public @ResponseBody AbstractSummary getListLessonTime(HttpServletRequest request){
 		if (!checkUserIsStillLoggedIn(request)){
 			return generateExpiredSessionMessage(new LessonsTimeListSummary());

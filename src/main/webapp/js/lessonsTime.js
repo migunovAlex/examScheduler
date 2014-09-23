@@ -42,67 +42,19 @@
 				id:"id"
 			}
 		});
-			
+		
 		$("#lessonsTime").jqGrid('navGrid','#lessonsTimePager',
-			{edit:false, add:false, del:false, search:false},
-			{},
-			{},
-			{},
-			{
-				sopt:['eq','ne','lt','gt','cn','bw','ew'],
-				closeOnEscape:true,
-				multipleSearch:true,
-				closeAfterSearch:true
-			}
-		);
-		
-		$("#lessonsTime").navButtonAdd('#lessonsTimePager',
-			{
-				caption:"",
-				buttonicon:"ui-icon-plus",
-				onClickButton: addRow,
-				position:"last",
-				title:"",
-				cursor:"pointer"
-			}
-		);
-		
-		$("#lessonsTime").navButtonAdd('#lessonsTimePager',
-			{
-				caption:"",
-				buttonicon:"ui-icon-pencil",
-				onClickButton:editRow,
-				position:"last",
-				title:"",
-				cursor:"pointer"
-			}
-		);
-		
-		$("#lessonsTime").navButtonAdd('#lessonsTimePager',
-			{
-				caption:"",
-				buttonicon:"ui-icon-trash",
-				onClickButton:deleteRow,
-				position:"last",
-				title:"",
-				cursor:"pointer"
-			}
-		);
-		
+				{edit:true, add:true, del:true, search:false},
+				{},
+				{},
+				{},
+				{
+					sopt:['eq','ne','lt','gt','cn','bw','ew'],
+					closeOnEscape:true,
+					multipleSearch:true,
+					closeAfterSearch:true
+				}
+			);
 	}
 		
-		
-		
-	function addRow(){
-		alert('Add Row');
-	}
-
-	function editRow(){
-		alert('Edit Row');
-	}
-	
-	function deleteRow(){
-		alert('Delete Row');
-	}
-
 })(jQuery);
