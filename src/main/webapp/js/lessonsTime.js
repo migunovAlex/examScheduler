@@ -42,10 +42,9 @@
 				id:"id"
 			}
 		});
-	}
-		
+			
 		$("#lessonsTime").jqGrid('navGrid','#lessonsTimePager',
-			{edit:false, add:false, del:false, search:true},
+			{edit:false, add:false, del:false, search:false},
 			{},
 			{},
 			{},
@@ -59,7 +58,7 @@
 		
 		$("#lessonsTime").navButtonAdd('#lessonsTimePager',
 			{
-				caption:"Добавить",
+				caption:"",
 				buttonicon:"ui-icon-plus",
 				onClickButton: addRow,
 				position:"last",
@@ -70,7 +69,7 @@
 		
 		$("#lessonsTime").navButtonAdd('#lessonsTimePager',
 			{
-				caption:"Редактировать",
+				caption:"",
 				buttonicon:"ui-icon-pencil",
 				onClickButton:editRow,
 				position:"last",
@@ -81,7 +80,7 @@
 		
 		$("#lessonsTime").navButtonAdd('#lessonsTimePager',
 			{
-				caption:"Удалить",
+				caption:"",
 				buttonicon:"ui-icon-trash",
 				onClickButton:deleteRow,
 				position:"last",
@@ -90,22 +89,20 @@
 			}
 		);
 		
-		$("#btnFilter").click(function(){
-			$("#lessonsTime").jqGrid('searchGrid', {multipleSearch: false, sopt:['eq']});
-		});
+	}
 		
-		function addRow(){
-			alert('Add Row');
-		}
-	
-		function editRow(){
-			alert('Edit Row');
-		}
 		
-		function deleteRow(){
-			alert('Delete Row');
-		}
+		
+	function addRow(){
+		alert('Add Row');
+	}
 
-
+	function editRow(){
+		alert('Edit Row');
+	}
 	
+	function deleteRow(){
+		alert('Delete Row');
+	}
+
 })(jQuery);
