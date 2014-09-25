@@ -1,6 +1,6 @@
 ﻿;(function($){
 	
-	var GET_ACTIVIST_LIST_URL = "/examScheduler/app/service/secured/classtime/all";
+	var CLASSTIME_URL = "/examScheduler/app/service/secured/classtime";
 	
 	$( document ).ready(function() {
 		initializeTable();
@@ -8,7 +8,7 @@
 	
 	function initializeTable(){
 		$("#lessonsTime").jqGrid({
-			url:GET_ACTIVIST_LIST_URL,
+			url:CLASSTIME_URL,
 			datatype:'json',
 			mtype:"POST",
 			loadBeforeSend: function(xhr)

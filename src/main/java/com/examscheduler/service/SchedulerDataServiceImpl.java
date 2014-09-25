@@ -45,8 +45,8 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 
 	public LessonTimeDTO updateLessonTime(LessonTimeDTO lessonTimeDTO) {
 
-		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeDTO
-				.getId());
+		LessonsTime lessonTime = persistenceDao.loadLessonsTime(Integer.parseInt(lessonTimeDTO
+				.getId()));
 		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
 		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
 		lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
@@ -72,7 +72,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		List<LessonTimeDTO> listLessonTimeDTO = new ArrayList<LessonTimeDTO>();
 		for (int i = 0; i < listLessonTime.size(); i++) {
 			LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
-			lessonTimeDTO.setId(listLessonTime.get(i).getId());
+			lessonTimeDTO.setId(String.valueOf(listLessonTime.get(i).getId()));
 			lessonTimeDTO.setLessonNumber(listLessonTime.get(i)
 					.getLessonNumber());
 			lessonTimeDTO.setTimeStart(listLessonTime.get(i).getTimeStart());
@@ -87,7 +87,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
 		if (lessonTime != null) {
 			LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
-			lessonTimeDTO.setId(lessonTime.getId());
+			lessonTimeDTO.setId(String.valueOf(lessonTime.getId()));
 			lessonTimeDTO.setLessonNumber(lessonTime.getLessonNumber());
 			lessonTimeDTO.setTimeStart(lessonTime.getTimeStart());
 			lessonTimeDTO.setTimeEnd(lessonTime.getTimeEnd());

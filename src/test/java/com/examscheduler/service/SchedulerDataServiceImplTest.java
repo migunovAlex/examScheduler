@@ -51,7 +51,7 @@ public class SchedulerDataServiceImplTest {
 		when(persistenceDao.loadLessonsTime(any(Integer.class))).thenReturn(loadLessonsTime());
 		LessonTimeDTO result = schedulerDataService.updateLessonTime(prepareLessonsTime());
 		assertNotNull(result);
-		assertEquals(result.getId().intValue(), loadLessonsTime().getId());
+		assertEquals(result.getId(), String.valueOf(loadLessonsTime().getId()));
 		assertEquals(result.getLessonNumber(), loadLessonsTime().getLessonNumber());
 		assertEquals(result.getTimeStart(), loadLessonsTime().getTimeStart());
 		assertEquals(result.getTimeEnd(), loadLessonsTime().getTimeEnd());
@@ -70,7 +70,7 @@ public class SchedulerDataServiceImplTest {
 		LessonsTime lessonTimeReturn = loadLessonsTime();
 		when(persistenceDao.loadLessonsTime(lessonId)).thenReturn(lessonTimeReturn);
 		LessonTimeDTO lessonTimeConvert = new LessonTimeDTO();
-		lessonTimeConvert.setId(loadLessonsTime().getId());
+		lessonTimeConvert.setId(String.valueOf(loadLessonsTime().getId()));
 		lessonTimeConvert.setLessonNumber(loadLessonsTime().getLessonNumber());
 		lessonTimeConvert.setTimeStart(loadLessonsTime().getTimeStart());
 		lessonTimeConvert.setTimeEnd(loadLessonsTime().getTimeEnd());
@@ -101,7 +101,7 @@ public class SchedulerDataServiceImplTest {
 		
 		assertNotNull(listLessonTimeDTO);
 		assertEquals(listLessonTimeDTO.size(), listLessonTime.size());
-		assertEquals(listLessonTimeDTO.get(0).getId().intValue(), listLessonTime.get(0).getId());
+		assertEquals(listLessonTimeDTO.get(0).getId(), String.valueOf(listLessonTime.get(0).getId()));
 		assertEquals(listLessonTimeDTO.get(0).getLessonNumber(), listLessonTime.get(0).getLessonNumber());
 		assertEquals(listLessonTimeDTO.get(0).getTimeStart(), listLessonTime.get(0).getTimeStart());
 		assertEquals(listLessonTimeDTO.get(0).getTimeEnd(), listLessonTime.get(0).getTimeEnd());
@@ -118,7 +118,7 @@ public class SchedulerDataServiceImplTest {
 	
 	private LessonTimeDTO prepareLessonsTime(){
 		LessonTimeDTO lessonTimeResult = new LessonTimeDTO();
-		lessonTimeResult.setId(5);
+		lessonTimeResult.setId(String.valueOf(5));
 		lessonTimeResult.setLessonNumber(5);
 		lessonTimeResult.setTimeStart(TIME_START);
 		lessonTimeResult.setTimeEnd(TIME_END);
