@@ -13,4 +13,13 @@ public class LessonsTimeConverter {
 		return lessonTime;
 	}
 
+	public LessonTimeDTO convertFromPersistence(LessonsTime lessonsTime) {
+		LessonTimeDTO resultDTO = new LessonTimeDTO();
+		resultDTO.setId(String.valueOf(lessonsTime.getId()));
+		resultDTO.setLessonNumber(lessonsTime.getLessonNumber());
+		resultDTO.setTimeStart(lessonsTime.getTimeStart());
+		resultDTO.setTimeEnd(lessonsTime.getTimeEnd());
+		return resultDTO;
+	}
+
 }

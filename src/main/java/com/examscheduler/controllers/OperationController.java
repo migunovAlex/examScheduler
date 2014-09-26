@@ -40,12 +40,12 @@ public class OperationController {
 	}
 	
 	@RequestMapping(value="/classtime/edit", method=RequestMethod.POST)
-	public @ResponseBody LessonTimeDTO updLessonsTime(@ModelAttribute LessonTimeDTO lessonTime){
+	public @ResponseBody AbstractSummary updLessonsTime(@ModelAttribute LessonTimeDTO lessonTime){
 		return schedulerDataService.updateLessonTime(lessonTime);
 	}
 	
 	@RequestMapping(value="/classtime/delete", method=RequestMethod.POST)
-	public @ResponseBody Boolean deleteLessonsTime(@ModelAttribute Integer lessonTimeId){
+	public @ResponseBody AbstractSummary deleteLessonsTime(@ModelAttribute Integer lessonTimeId){
 		return schedulerDataService.deleteLessonTime(lessonTimeId);
 	}
 	

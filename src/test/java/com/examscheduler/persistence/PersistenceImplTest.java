@@ -56,11 +56,10 @@ public class PersistenceImplTest {
 		assertEquals(createResult, true);
 	}
 	
-	@Test	
+	@Test(expected=HibernateException.class)	
 	public void shouldCreateLessonsTimeFalse(){
 		doThrow(new HibernateException("Can not save to BD")).when(session).save(any(LessonsTime.class));
-		Boolean createResult = persistence.createLessonsTime(getLessonsTimeClass(12));
-		assertEquals(createResult, false);
+		persistence.createLessonsTime(getLessonsTimeClass(12));
 	}
 	
 	@Test

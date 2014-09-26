@@ -1,14 +1,18 @@
 package com.examscheduler.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.examscheduler.controllers.tools.LessonsTimeConverter;
 import com.examscheduler.controllers.tools.LessonsTimeValidator;
 import com.examscheduler.dto.AuditoryDTO;
+import com.examscheduler.dto.ErrorData;
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.AbstractSummary;
 import com.examscheduler.dto.summary.AuditoryListSummary;
@@ -28,55 +32,80 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 	@Autowired
 	private LessonsTimeConverter lessonsTimeConverter;
 
+	private static Logger logger = Logger.getLogger(SchedulerDataServiceImpl.class);
+
 	public AbstractSummary createLessonTime(LessonTimeDTO lessonTimeDTO) {
 		if (lessonTimeDTO == null)
 			throw new IllegalArgumentException("Lessons Time is null");
-		LessonsTime lessonTime = lessonsTimeConverter
-				.convertFromDTO(lessonTimeDTO);
-		if (!lessonsTimeValidator.isValid(lessonTime,
-				persistenceDao.getListLessonTime())) {
-
+		LessonsTime lessonTime = lessonsTimeConverter.convertFromDTO(lessonTimeDTO);
+		OperationResultSummary result = new OperationResultSummary();
+		if (!lessonsTimeValidator.isValid(lessonTime, persistenceDao.getListLessonTime())) {
+			result.getErrorData().setNumberCode(ErrorData.NOT_PROPER_DATA);
+			result.getErrorData().setDescription(ErrorData.NOT_PROPER_DATA_MESSAGE);
+			return result;
 		}
-		OperationResultSummary operationResult = new OperationResultSummary();
-		operationResult.setOperationResult(persistenceDao
-				.createLessonsTime(lessonTime));
-		return operationResult;
+		try{
+			result.setOperationResult(persistenceDao.createLessonsTime(lessonTime));
+		}
+		catch(HibernateException e){
+			logger.error("error while creating lessonsTime - " + lessonTimeDTO.getId(), e);
+			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
+			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+			return result;
+		}
+		
+		return result;
 	}
 
-	public LessonTimeDTO updateLessonTime(LessonTimeDTO lessonTimeDTO) {
-		LessonsTime lessonTime = persistenceDao.loadLessonsTime(Integer
-				.parseInt(lessonTimeDTO.getId()));
-		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
-		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
-		lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
-		Boolean updLessonTime = persistenceDao.updateLessonsTime(lessonTime);
-
-		if (updLessonTime == true) {
-			return lessonTimeDTO;
+	public AbstractSummary updateLessonTime(LessonTimeDTO lessonTimeDTO) {
+		OperationResultSummary result = new OperationResultSummary();
+		boolean updLessonTime = false;
+		try {
+			LessonsTime lessonTime = persistenceDao.loadLessonsTime(Integer.parseInt(lessonTimeDTO.getId()));
+			lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
+			lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
+			lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
+			updLessonTime = persistenceDao.updateLessonsTime(lessonTime);
+		} catch (HibernateException e) {
+			logger.error("error while updating lessonsTime - " + lessonTimeDTO.getId(), e);
+			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
+			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+			return result;
 		}
-
-		return null;
+		result.setOperationResult(updLessonTime);
+		return result;
 	}
 
-	public Boolean deleteLessonTime(Integer lessonTimeId) {
-
+	public AbstractSummary deleteLessonTime(Integer lessonTimeId) {
+		OperationResultSummary result = new OperationResultSummary();
+		boolean deleteLessonsTime = false;
+		try{
 		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
-		Boolean delLessonTime = persistenceDao.deleteLessonsTime(lessonTime);
-		return delLessonTime;
+		deleteLessonsTime = persistenceDao.deleteLessonsTime(lessonTime);
+		}catch(HibernateException e){
+			logger.error("error while deleting lessonsTime - " + lessonTimeId, e);
+			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
+			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+			return result;
+		}
+		result.setOperationResult(deleteLessonsTime);
+		return result;
 	}
 
-	public LessonsTimeListSummary getListLessonTime() {
+	public AbstractSummary getListLessonTime() {
 		LessonsTimeListSummary result = new LessonsTimeListSummary();
-		List<LessonsTime> listLessonTime = persistenceDao.getListLessonTime();
+		List<LessonsTime> listLessonTime = Collections.emptyList();
+		try{
+		listLessonTime = persistenceDao.getListLessonTime();
+		}catch(HibernateException e){
+			logger.error("error while getting lessonsTime list", e);
+			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
+			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+			return result;
+		}
 		List<LessonTimeDTO> listLessonTimeDTO = new ArrayList<LessonTimeDTO>();
-		for (int i = 0; i < listLessonTime.size(); i++) {
-			LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
-			lessonTimeDTO.setId(String.valueOf(listLessonTime.get(i).getId()));
-			lessonTimeDTO.setLessonNumber(listLessonTime.get(i)
-					.getLessonNumber());
-			lessonTimeDTO.setTimeStart(listLessonTime.get(i).getTimeStart());
-			lessonTimeDTO.setTimeEnd(listLessonTime.get(i).getTimeEnd());
-			listLessonTimeDTO.add(lessonTimeDTO);
+		for (LessonsTime lessonsTime : listLessonTime) {
+			listLessonTimeDTO.add(lessonsTimeConverter.convertFromPersistence(lessonsTime));
 		}
 		result.setLessonsTimeList(listLessonTimeDTO);
 		return result;
@@ -85,12 +114,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 	public LessonTimeDTO loadLessonTime(Integer lessonTimeId) {
 		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
 		if (lessonTime != null) {
-			LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
-			lessonTimeDTO.setId(String.valueOf(lessonTime.getId()));
-			lessonTimeDTO.setLessonNumber(lessonTime.getLessonNumber());
-			lessonTimeDTO.setTimeStart(lessonTime.getTimeStart());
-			lessonTimeDTO.setTimeEnd(lessonTime.getTimeEnd());
-			return lessonTimeDTO;
+			return lessonsTimeConverter.convertFromPersistence(lessonTime);
 		}
 		return null;
 	}
@@ -122,8 +146,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 	public OperationResultSummary deleteAuditory(Integer auditoryId) {
 		if (auditoryId == null)
 			throw new IllegalArgumentException("Auditory Id is null");
-		boolean isAuditoryDelete = persistenceDao
-				.deleteAuditories(persistenceDao.loadAuditorie(auditoryId));
+		boolean isAuditoryDelete = persistenceDao.deleteAuditories(persistenceDao.loadAuditorie(auditoryId));
 		OperationResultSummary result = new OperationResultSummary();
 		result.setOperationResult(isAuditoryDelete);
 		return result;
@@ -145,8 +168,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		return result;
 	}
 
-	public void setLessonsTimeValidator(
-			LessonsTimeValidator lessonsTimeValidator) {
+	public void setLessonsTimeValidator(LessonsTimeValidator lessonsTimeValidator) {
 		this.lessonsTimeValidator = lessonsTimeValidator;
 	}
 
@@ -154,8 +176,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		this.persistenceDao = persistenceDao;
 	}
 
-	public void setLessonsTimeConverter(
-			LessonsTimeConverter lessonsTimeConverter) {
+	public void setLessonsTimeConverter(LessonsTimeConverter lessonsTimeConverter) {
 		this.lessonsTimeConverter = lessonsTimeConverter;
 	}
 
