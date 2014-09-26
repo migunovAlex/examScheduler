@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.examscheduler.controllers.tools.LessonsTimeValidator;
 import com.examscheduler.dto.AuditoryDTO;
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.AbstractSummary;
@@ -21,15 +22,9 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 
 	@Autowired
 	private PersistenceDAO persistenceDao;
-
-	public PersistenceDAO getPersistenceDao() {
-		return persistenceDao;
-	}
-
-	public void setPersistenceDao(PersistenceDAO persistenceDao) {
-		this.persistenceDao = persistenceDao;
-	}
-
+	@Autowired
+	private LessonsTimeValidator lessonsTimeValidator;
+	
 	public AbstractSummary createLessonTime(LessonTimeDTO lessonTimeDTO) {
 		if(lessonTimeDTO==null)
 			throw new IllegalArgumentException("Lessons Time is null");
@@ -143,5 +138,13 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		
 		result.setAuditoryList(auditoryDTOList);
 		return result;
+	}
+	
+	public void setLessonsTimeValidator(LessonsTimeValidator lessonsTimeValidator) {
+		this.lessonsTimeValidator = lessonsTimeValidator;
+	}
+
+	public void setPersistenceDao(PersistenceDAO persistenceDao) {
+		this.persistenceDao = persistenceDao;
 	}
 }

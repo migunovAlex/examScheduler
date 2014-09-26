@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
+import com.examscheduler.controllers.tools.CookieHelper;
 import com.examscheduler.dto.ErrorData;
 import com.examscheduler.security.service.SessionService;
 import com.examscheduler.summary.OperationResultSummary;

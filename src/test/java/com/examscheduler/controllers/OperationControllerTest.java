@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
 
+import com.examscheduler.controllers.tools.CookieHelper;
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.AbstractSummary;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;

@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.ModelMap;
 
+import com.examscheduler.controllers.tools.CookieHelper;
 import com.examscheduler.security.service.UserDetailService;
 
 public class GetPageControllerTest {
