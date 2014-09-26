@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.examscheduler.controllers.tools.LessonsTimeConverter;
 import com.examscheduler.controllers.tools.LessonsTimeValidator;
 import com.examscheduler.dto.AuditoryDTO;
 import com.examscheduler.dto.LessonTimeDTO;
@@ -24,14 +25,18 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 	private PersistenceDAO persistenceDao;
 	@Autowired
 	private LessonsTimeValidator lessonsTimeValidator;
-	
+	@Autowired
+	private LessonsTimeConverter lessonsTimeConverter;
+
 	public AbstractSummary createLessonTime(LessonTimeDTO lessonTimeDTO) {
-		if(lessonTimeDTO==null)
+		if (lessonTimeDTO == null)
 			throw new IllegalArgumentException("Lessons Time is null");
-		LessonsTime lessonTime = new LessonsTime();
-		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
-		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
-		lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
+		LessonsTime lessonTime = lessonsTimeConverter
+				.convertFromDTO(lessonTimeDTO);
+		if (!lessonsTimeValidator.isValid(lessonTime,
+				persistenceDao.getListLessonTime())) {
+
+		}
 		OperationResultSummary operationResult = new OperationResultSummary();
 		operationResult.setOperationResult(persistenceDao
 				.createLessonsTime(lessonTime));
@@ -39,9 +44,8 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 	}
 
 	public LessonTimeDTO updateLessonTime(LessonTimeDTO lessonTimeDTO) {
-
-		LessonsTime lessonTime = persistenceDao.loadLessonsTime(Integer.parseInt(lessonTimeDTO
-				.getId()));
+		LessonsTime lessonTime = persistenceDao.loadLessonsTime(Integer
+				.parseInt(lessonTimeDTO.getId()));
 		lessonTime.setLessonNumber(lessonTimeDTO.getLessonNumber());
 		lessonTime.setTimeStart(lessonTimeDTO.getTimeStart());
 		lessonTime.setTimeEnd(lessonTimeDTO.getTimeEnd());
@@ -104,7 +108,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 	}
 
 	public OperationResultSummary updateAuditory(AuditoryDTO auditoryDTO) {
-		if(auditoryDTO == null)
+		if (auditoryDTO == null)
 			throw new IllegalArgumentException("Auditory is null");
 		Auditory auditory = persistenceDao.loadAuditorie(auditoryDTO.getId());
 		auditory.setAudNumber(auditoryDTO.getAudNumber());
@@ -118,7 +122,8 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 	public OperationResultSummary deleteAuditory(Integer auditoryId) {
 		if (auditoryId == null)
 			throw new IllegalArgumentException("Auditory Id is null");
-		boolean isAuditoryDelete = persistenceDao.deleteAuditories(persistenceDao.loadAuditorie(auditoryId));
+		boolean isAuditoryDelete = persistenceDao
+				.deleteAuditories(persistenceDao.loadAuditorie(auditoryId));
 		OperationResultSummary result = new OperationResultSummary();
 		result.setOperationResult(isAuditoryDelete);
 		return result;
@@ -128,23 +133,30 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		AuditoryListSummary result = new AuditoryListSummary();
 		List<Auditory> auditoryList = persistenceDao.getAuditory();
 		List<AuditoryDTO> auditoryDTOList = new ArrayList<AuditoryDTO>();
-		for(int i=0;i<auditoryList.size();i++){
+		for (int i = 0; i < auditoryList.size(); i++) {
 			AuditoryDTO auditoryDTO = new AuditoryDTO();
 			auditoryDTO.setId(auditoryList.get(i).getId());
 			auditoryDTO.setAudNumber(auditoryList.get(i).getAudNumber());
 			auditoryDTO.setMaxPerson(auditoryList.get(i).getMaxPerson());
 			auditoryDTOList.add(auditoryDTO);
 		}
-		
+
 		result.setAuditoryList(auditoryDTOList);
 		return result;
 	}
-	
-	public void setLessonsTimeValidator(LessonsTimeValidator lessonsTimeValidator) {
+
+	public void setLessonsTimeValidator(
+			LessonsTimeValidator lessonsTimeValidator) {
 		this.lessonsTimeValidator = lessonsTimeValidator;
 	}
 
 	public void setPersistenceDao(PersistenceDAO persistenceDao) {
 		this.persistenceDao = persistenceDao;
 	}
+
+	public void setLessonsTimeConverter(
+			LessonsTimeConverter lessonsTimeConverter) {
+		this.lessonsTimeConverter = lessonsTimeConverter;
+	}
+
 }

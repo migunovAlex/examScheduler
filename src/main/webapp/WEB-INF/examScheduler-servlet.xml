@@ -47,5 +47,7 @@
     <bean id="cookieHelper" class="com.examscheduler.controllers.CookieHelper"/>
     
     <bean id="lessonsTimeValidator" class="com.examscheduler.controllers.tools.LessonsTimeValidator"/>
+    
+    <bean id="lessonsTimeConverter" class="com.examscheduler.controllers.tools.LessonsTimeConverter"/>
    
 </beans>    
