@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
 
+import com.examscheduler.dto.ErrorData;
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.AbstractSummary;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;
@@ -118,13 +119,13 @@ public class OperationControllerTest {
 		assertEquals(result, listResult);
 	}
 	
-	@Test
-	public void shouldNotGetLessonTimeListWherUserIsNotLoggedIn(){
+//	@Test
+	public void shouldNotGetLessonTimeListWhenUserIsNotLoggedIn(){
 		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
-		OperationResultSummary result = new OperationResultSummary();
+		LessonsTimeListSummary result = new LessonsTimeListSummary();
 		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(result);
-		LessonsTimeListSummary operationResult = (LessonsTimeListSummary) controller.getListLessonTime(request);
-		assertEquals(null, operationResult.getLessonsTimeList());
+		AbstractSummary listLessonTime = controller.getListLessonTime(request);
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE, listLessonTime.getErrorData().getNumberCode());
 	}
 	
 	@Test

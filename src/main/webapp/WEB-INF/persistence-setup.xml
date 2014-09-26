@@ -36,6 +36,7 @@
 				<value>com.examscheduler.security.persistence.entity.DbUser</value>
 				<value>com.examscheduler.entity.LessonsTime</value>
 				<value>com.examscheduler.security.persistence.entity.UserSession</value>
+				<value>com.examscheduler.entity.Auditory</value>
 			</list>
 		</property>
 	</bean>

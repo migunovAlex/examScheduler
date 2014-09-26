@@ -96,7 +96,7 @@ public class SchedulerDataServiceImplTest {
 		listLessonTime.add(loadLessonsTime());
 		
 		when(persistenceDao.getListLessonTime()).thenReturn(listLessonTime);
-		LessonsTimeListSummary lessonsTimeSummary = schedulerDataService.getListLessonTime();
+		LessonsTimeListSummary lessonsTimeSummary = (LessonsTimeListSummary) schedulerDataService.getListLessonTime();
 		List<LessonTimeDTO> listLessonTimeDTO = lessonsTimeSummary.getLessonsTimeList();
 		
 		assertNotNull(listLessonTimeDTO);

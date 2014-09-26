@@ -4,7 +4,6 @@ import com.examscheduler.dto.AuditoryDTO;
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.AbstractSummary;
 import com.examscheduler.dto.summary.AuditoryListSummary;
-import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.summary.OperationResultSummary;
 
 public interface SchedulerDataService {
@@ -15,7 +14,7 @@ public interface SchedulerDataService {
 
 	public Boolean deleteLessonTime(Integer lessonTimeId);
 
-	public LessonsTimeListSummary getListLessonTime();
+	public AbstractSummary getListLessonTime();
 
 	public LessonTimeDTO loadLessonTime(Integer lessonTimeId);
 	

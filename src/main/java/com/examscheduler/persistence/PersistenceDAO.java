@@ -25,5 +25,5 @@ public interface PersistenceDAO {
 	
 	public List<LessonsTime> getListLessonTime();
 
-	public List<Auditory> getAuditory();
+	public List<Auditory> getListAuditory();
 }

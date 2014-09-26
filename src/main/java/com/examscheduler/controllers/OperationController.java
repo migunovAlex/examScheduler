@@ -13,7 +13,6 @@ import com.examscheduler.dto.AuditoryDTO;
 import com.examscheduler.dto.ErrorData;
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.AbstractSummary;
-import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.security.service.UserDetailService;
 import com.examscheduler.service.SchedulerDataService;
 import com.examscheduler.summary.OperationResultSummary;
@@ -32,11 +31,19 @@ public class OperationController {
 	@RequestMapping(value="/classtime/new", method=RequestMethod.POST)
 	public @ResponseBody AbstractSummary createLessonsTime(HttpServletRequest request, @RequestBody LessonTimeDTO lessonTime){
 		if (!checkUserIsStillLoggedIn(request)){
-			return generateExpiredSessionMessage(new OperationResultSummary());
+			return generateExpiredSessionMessage();
 		}
 		return schedulerDataService.createLessonTime(lessonTime);
 	}
 	
+	private AbstractSummary generateExpiredSessionMessage() {
+		return generateErrorMessage(new OperationResultSummary(),  ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE, ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+	}
+	
+	private AbstractSummary generateErrorConnectionToDataBase(){
+		return generateErrorMessage(new OperationResultSummary(), ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE, ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+	}
+
 	@RequestMapping(value="/classtime/edit", method=RequestMethod.POST)
 	public @ResponseBody LessonTimeDTO updLessonsTime(@RequestBody LessonTimeDTO lessonTime){
 		return schedulerDataService.updateLessonTime(lessonTime);
@@ -55,16 +62,15 @@ public class OperationController {
 	@RequestMapping(value="/classtime/all", method=RequestMethod.POST)
 	public @ResponseBody AbstractSummary getListLessonTime(HttpServletRequest request){
 		if (!checkUserIsStillLoggedIn(request)){
-			return generateExpiredSessionMessage(new LessonsTimeListSummary());
+			return generateExpiredSessionMessage();
 		}
 		return schedulerDataService.getListLessonTime();
 	}
 
-	private AbstractSummary generateExpiredSessionMessage(AbstractSummary abstractSummary) {
+	private AbstractSummary generateErrorMessage(AbstractSummary abstractSummary, int errorCode, String errorMessage) {
 		ErrorData errorData = new ErrorData();
-		errorData.setNumberCode(ErrorData.EXPIRED_SESSION_CODE);
-		errorData.setDescription(ErrorData.EXPIRED_SESSION_MESSAGE);
-		abstractSummary.setErrorData(errorData);
+		errorData.setNumberCode(errorCode);
+		errorData.setDescription(errorMessage);
 		return abstractSummary;
 	}
 	
@@ -79,7 +85,7 @@ public class OperationController {
 	@RequestMapping(value="/auditory/new", method=RequestMethod.POST)
 	public @ResponseBody AbstractSummary createAuditoriesTimes(HttpServletRequest request, @RequestBody AuditoryDTO auditory){
 		if(!checkUserIsStillLoggedIn(request)){
-			return generateExpiredSessionMessage(new OperationResultSummary());
+			return generateExpiredSessionMessage();
 		}
 		return schedulerDataService.createAuditory(auditory);
 	}
@@ -87,7 +93,7 @@ public class OperationController {
 	@RequestMapping(value="/auditory/edit", method=RequestMethod.POST)
 	public @ResponseBody AbstractSummary updateAuditoriesTimes(HttpServletRequest request, @RequestBody AuditoryDTO auditoryDTO){
 		if(!checkUserIsStillLoggedIn(request)){
-			return generateExpiredSessionMessage(new OperationResultSummary());
+			return generateExpiredSessionMessage();
 		}
 		return schedulerDataService.updateAuditory(auditoryDTO);
 	}
@@ -95,7 +101,7 @@ public class OperationController {
 	@RequestMapping(value="/auditory/delete", method=RequestMethod.POST)
 	public @ResponseBody AbstractSummary deleteAuditory(HttpServletRequest request, @RequestBody Integer auditoryId){
 		if(!checkUserIsStillLoggedIn(request)){
-			return generateExpiredSessionMessage(new OperationResultSummary());
+			return generateExpiredSessionMessage();
 		}
 		return schedulerDataService.deleteAuditory(auditoryId);
 	}
@@ -103,11 +109,10 @@ public class OperationController {
 	@RequestMapping(value="/auditory/all", method=RequestMethod.POST)
 	public @ResponseBody AbstractSummary getAuditories(HttpServletRequest request){
 		if(!checkUserIsStillLoggedIn(request)){
-			return generateExpiredSessionMessage(new OperationResultSummary());
+			return generateExpiredSessionMessage();
 		}
 		return schedulerDataService.getListAuditory();
 	}
-	
 
 	public void setCookieHelper(CookieHelper cookieHelper) {
 		this.cookieHelper = cookieHelper;
