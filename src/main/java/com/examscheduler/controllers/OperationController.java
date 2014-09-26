@@ -30,7 +30,7 @@ public class OperationController {
 	@Autowired
 	private CookieHelper cookieHelper;
 	
-	@RequestMapping(value="/classtime", method=RequestMethod.POST)
+	@RequestMapping(value="/classtime/new", method=RequestMethod.POST)
 	public @ResponseBody AbstractSummary createLessonsTime(HttpServletRequest request, @ModelAttribute LessonTimeDTO lessonTime){
 		if (!checkUserIsStillLoggedIn(request)){
 			return generateExpiredSessionMessage(new OperationResultSummary());
@@ -39,12 +39,12 @@ public class OperationController {
 	}
 	
 	@RequestMapping(value="/classtime/edit", method=RequestMethod.POST)
-	public @ResponseBody LessonTimeDTO updLessonsTime(@RequestBody LessonTimeDTO lessonTime){
+	public @ResponseBody LessonTimeDTO updLessonsTime(@ModelAttribute LessonTimeDTO lessonTime){
 		return schedulerDataService.updateLessonTime(lessonTime);
 	}
 	
 	@RequestMapping(value="/classtime/delete", method=RequestMethod.POST)
-	public @ResponseBody Boolean deleteLessonsTime(@RequestBody Integer lessonTimeId){
+	public @ResponseBody Boolean deleteLessonsTime(@ModelAttribute Integer lessonTimeId){
 		return schedulerDataService.deleteLessonTime(lessonTimeId);
 	}
 	
@@ -53,7 +53,7 @@ public class OperationController {
 		return schedulerDataService.loadLessonTime(lessonTimeId);
 	}
 	
-	@RequestMapping(value="/classtime", method=RequestMethod.GET)
+	@RequestMapping(value="/classtime/all", method=RequestMethod.GET)
 	public @ResponseBody AbstractSummary getListLessonTime(HttpServletRequest request){
 		if (!checkUserIsStillLoggedIn(request)){
 			return generateExpiredSessionMessage(new LessonsTimeListSummary());

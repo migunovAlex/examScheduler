@@ -8,9 +8,8 @@
 	
 	function initializeTable(){
 		$("#lessonsTime").jqGrid({
-			url:CLASSTIME_URL,
+			url:CLASSTIME_URL+"/all",
 			datatype:'json',
-			mtype:"POST",
 			loadBeforeSend: function(xhr)
 			{
 			   xhr.setRequestHeader("Content-Type", "application/json");
@@ -45,15 +44,12 @@
 		
 		$("#lessonsTime").jqGrid('navGrid','#lessonsTimePager',
 				{edit:true, add:true, del:true, search:false},
-				{},
-				{},
-				{},
-				{
-					sopt:['eq','ne','lt','gt','cn','bw','ew'],
-					closeOnEscape:true,
-					multipleSearch:true,
-					closeAfterSearch:true
-				}
+				 //edit options
+			    { url: CLASSTIME_URL+"/edit" },
+			    //add options
+			    { url: CLASSTIME_URL+"/new" },
+			    //delete options
+			    { url: CLASSTIME_URL+"/delete" }
 			);
 	}
 		
