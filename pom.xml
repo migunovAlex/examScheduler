@@ -57,18 +57,18 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		
-		 <dependency>  
-            <groupId>org.codehaus.jackson</groupId>  
-            <artifactId>jackson-mapper-asl</artifactId>  
-            <version>1.9.2</version>  
-        </dependency>  
-        <dependency>  
-            <groupId>org.codehaus.jackson</groupId>  
-            <artifactId>jackson-core-asl</artifactId>  
-            <version>1.9.2</version>  
-        </dependency>  
-		
+
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
@@ -143,6 +143,11 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.27</version>
 		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.4</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>examScheduler</finalName>
@@ -153,7 +158,7 @@
 				<!-- <version>2.5.2</version> -->
 				<configuration>
 					<instrumentation>
-						<ignoreTrivial>true</ignoreTrivial> 
+						<ignoreTrivial>true</ignoreTrivial>
 						<ignores>
 							<ignore>com.examscheduler.security.persistence.entity.*</ignore>
 							<ignore>com.examscheduler.entity.*</ignore>

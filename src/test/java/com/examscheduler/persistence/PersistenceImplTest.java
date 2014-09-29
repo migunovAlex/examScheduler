@@ -26,8 +26,6 @@ import com.examscheduler.exceptions.PersistentActionException;
 
 public class PersistenceImplTest {
 	
-	private static final int ZERO_LENGTH = 0;
-
 	private static final String TIME_END = "09:30";
 
 	private static final String TIME_START = "08:00";
@@ -57,11 +55,10 @@ public class PersistenceImplTest {
 		assertEquals(createResult, true);
 	}
 	
-	@Test	
+	@Test(expected=HibernateException.class)	
 	public void shouldCreateLessonsTimeFalse(){
 		doThrow(new HibernateException("Can not save to BD")).when(session).save(any(LessonsTime.class));
-		Boolean createResult = persistence.createLessonsTime(getLessonsTimeClass(12));
-		assertEquals(createResult, false);
+		persistence.createLessonsTime(getLessonsTimeClass(12));
 	}
 	
 	@Test
@@ -72,11 +69,10 @@ public class PersistenceImplTest {
 		verify(session, times(1)).delete(lessonsTimeClass);
 	}
 	
-	@Test
-	public void shouldDeleteLessensTimeException(){
+	@Test(expected=HibernateException.class)
+	public void shouldThrowExceptionWhileDeleteLessensTime(){
 		doThrow(new HibernateException("Can not delete from DB")).when(session).delete(any(LessonsTime.class));
-		Boolean resultDelete = persistence.deleteLessonsTime(getLessonsTimeClass(12));
-		assertEquals(resultDelete, false);
+		persistence.deleteLessonsTime(getLessonsTimeClass(12));
 	}
 	
 	@Test
@@ -102,11 +98,10 @@ public class PersistenceImplTest {
 		verify(session, times(1)).update(lessonsTimeClass);
 	}
 	
-	@Test
-	public void shouldUpdateLessonsTimeException(){
+	@Test(expected=HibernateException.class)
+	public void shouldThrowExceptionWhileUpdateLessonsTime(){
 		doThrow(new HibernateException("Can not update to DB")).when(session).update(any(LessonsTime.class));
-		Boolean resultUpdate = persistence.updateLessonsTime(getLessonsTimeClass(12));
-		assertEquals(resultUpdate,false);
+		persistence.updateLessonsTime(getLessonsTimeClass(12));
 	}
 	
 	@Test 
@@ -124,13 +119,11 @@ public class PersistenceImplTest {
 		assertEquals(resultList.get(0).getTimeEnd(), listLessonsTime.get(0).getTimeEnd());
 	}
 	
-	@Test
+	@Test(expected=HibernateException.class)
 	public void shouldGetListLessonsTimeException(){
 		when(session.createCriteria(any(Class.class))).thenReturn(criteria);
 		doThrow(new HibernateException("Can not get list of LessonsTime")).when(criteria).list();
-		List <LessonsTime> listResult = persistence.getListLessonTime();
-		assertNotNull(listResult);
-		assertEquals(ZERO_LENGTH, listResult.size());
+		persistence.getListLessonTime();
 	}
 	
 	public LessonsTime getLessonsTimeClass(int id){
@@ -184,7 +177,7 @@ public class PersistenceImplTest {
 		Auditory auditorie = getAuditorie();
 		when(session.load(Auditory.class, 1)).thenReturn(auditorie);
 		Auditory resultLoad = persistence.loadAuditorie(1);
-		assertEquals(resultLoad, auditorie);
+		assertEquals(auditorie, resultLoad);
 	}
 	
 	@Test

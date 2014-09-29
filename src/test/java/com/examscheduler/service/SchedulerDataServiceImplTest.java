@@ -1,5 +1,11 @@
 package com.examscheduler.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,15 +14,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
-
+import com.examscheduler.controllers.tools.LessonsTimeConverter;
+import com.examscheduler.controllers.tools.LessonsTimeValidator;
+import com.examscheduler.dto.ErrorData;
 import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.dto.summary.AbstractSummary;
+import com.examscheduler.dto.summary.LessonTimeSummary;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.entity.LessonsTime;
+import com.examscheduler.helpers.ResponseSummaryCreator;
 import com.examscheduler.persistence.PersistenceDAO;
 import com.examscheduler.summary.OperationResultSummary;
 
@@ -24,116 +30,157 @@ public class SchedulerDataServiceImplTest {
 	
 	private static final String TIME_END = "09:30";
 	private static final String TIME_START = "08:00";
+	private static final int LESSON_NUMBER = 5;
 	private SchedulerDataServiceImpl schedulerDataService;
-	private static final Integer lessonId = 1;
+	private static final int LESSON_ID = 1;
 	
 	@Mock
 	private PersistenceDAO persistenceDao;
+	@Mock
+	private LessonsTimeValidator lessonsTimeValidator;
+	@Mock
+	private LessonsTimeConverter lessonsTimeConverter;
+	@Mock
+	private ResponseSummaryCreator responseSummaryCreator;
 	
 	@Before
 	public void setUp(){
 		MockitoAnnotations.initMocks(this);
 		schedulerDataService = new SchedulerDataServiceImpl();
 		schedulerDataService.setPersistenceDao(persistenceDao);
-		
+		schedulerDataService.setLessonsTimeConverter(lessonsTimeConverter);
+		schedulerDataService.setLessonsTimeValidator(lessonsTimeValidator);
+		schedulerDataService.setResponseSummaryCreator(responseSummaryCreator);
+		when(responseSummaryCreator.generateErrorConnectionToDataBaseResponse()).thenReturn(generateErrorConnectionToDBMessage());
+		when(responseSummaryCreator.generateNotProperDataResponse()).thenReturn(generateNotProperDataDBMessage());
 	}
 	
+	private AbstractSummary generateNotProperDataDBMessage() {
+		OperationResultSummary result = new OperationResultSummary();
+		result.getErrorData().setNumberCode(ErrorData.NOT_PROPER_DATA);
+		result.getErrorData().setDescription(ErrorData.NOT_PROPER_DATA_MESSAGE);
+		return result;
+	}
+
+	private AbstractSummary generateErrorConnectionToDBMessage() {
+		OperationResultSummary result = new OperationResultSummary();
+		result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
+		result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldCreateLessonTime(){
+		LessonTimeDTO preparedLessonsTime = prepareLessonsTimeDTO();
+		LessonsTime convertedLessonsTime = generateLessonsTime();
+		when(lessonsTimeConverter.convertFromDTO(preparedLessonsTime)).thenReturn(convertedLessonsTime);
+		when(lessonsTimeValidator.isValid(any(LessonsTime.class), any(List.class))).thenReturn(Boolean.TRUE);
 		when(persistenceDao.createLessonsTime(any(LessonsTime.class))).thenReturn(true);
-		OperationResultSummary lessonTimeCreate = (OperationResultSummary) schedulerDataService.createLessonTime(prepareLessonsTime());
+		OperationResultSummary lessonTimeCreate = (OperationResultSummary) schedulerDataService.createLessonTime(preparedLessonsTime);
 		assertEquals(Boolean.TRUE, lessonTimeCreate.isOperationResult());
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldNotUpdateWithNotValidPeriod(){
+		when(persistenceDao.updateLessonsTime(any(LessonsTime.class))).thenReturn(true);
+		when(persistenceDao.loadLessonsTime(any(Integer.class))).thenReturn(generateLessonsTime());
+		when(lessonsTimeValidator.isValid(any(LessonsTime.class), any(List.class))).thenReturn(Boolean.FALSE);
+		OperationResultSummary result = (OperationResultSummary) schedulerDataService.updateLessonTime(prepareLessonsTimeDTO());
+		assertNotNull(result);
+		assertEquals(Boolean.FALSE, result.isOperationResult());
+	}
+
+	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldUpdateLessonsTime(){
 		when(persistenceDao.updateLessonsTime(any(LessonsTime.class))).thenReturn(true);
-		when(persistenceDao.loadLessonsTime(any(Integer.class))).thenReturn(loadLessonsTime());
-		LessonTimeDTO result = schedulerDataService.updateLessonTime(prepareLessonsTime());
+		when(persistenceDao.loadLessonsTime(any(Integer.class))).thenReturn(generateLessonsTime());
+		when(lessonsTimeValidator.isValid(any(LessonsTime.class), any(List.class))).thenReturn(Boolean.TRUE);
+		OperationResultSummary result = (OperationResultSummary) schedulerDataService.updateLessonTime(prepareLessonsTimeDTO());
 		assertNotNull(result);
-		assertEquals(result.getId().intValue(), loadLessonsTime().getId());
-		assertEquals(result.getLessonNumber(), loadLessonsTime().getLessonNumber());
-		assertEquals(result.getTimeStart(), loadLessonsTime().getTimeStart());
-		assertEquals(result.getTimeEnd(), loadLessonsTime().getTimeEnd());
+		assertEquals(Boolean.TRUE, result.isOperationResult());
 	}	
 	
 	@Test
 	public void shouldDeleteLessonTime(){
-		LessonsTime getLessonsTimeById = persistenceDao.loadLessonsTime(lessonId);
+		LessonsTime getLessonsTimeById = persistenceDao.loadLessonsTime(LESSON_ID);
 		when(persistenceDao.deleteLessonsTime(getLessonsTimeById)).thenReturn(true);
-		Boolean lessonTimeDelete = schedulerDataService.deleteLessonTime(lessonId);
-		assertEquals(lessonTimeDelete, true);
+		OperationResultSummary result = (OperationResultSummary) schedulerDataService.deleteLessonTime(LESSON_ID);
+		assertEquals(Boolean.TRUE, result.isOperationResult());
 	}
 	
 	@Test 
 	public void shouldLoadLessonTime(){
-		LessonsTime lessonTimeReturn = loadLessonsTime();
-		when(persistenceDao.loadLessonsTime(lessonId)).thenReturn(lessonTimeReturn);
-		LessonTimeDTO lessonTimeConvert = new LessonTimeDTO();
-		lessonTimeConvert.setId(loadLessonsTime().getId());
-		lessonTimeConvert.setLessonNumber(loadLessonsTime().getLessonNumber());
-		lessonTimeConvert.setTimeStart(loadLessonsTime().getTimeStart());
-		lessonTimeConvert.setTimeEnd(loadLessonsTime().getTimeEnd());
+		LessonsTime lessonTime = generateLessonsTime();
+		when(persistenceDao.loadLessonsTime(LESSON_ID)).thenReturn(lessonTime);
+		when(lessonsTimeConverter.convertFromPersistence(lessonTime)).thenReturn(prepareLessonsTimeDTO());
 		
-		LessonTimeDTO loadLessonTimeDTO = schedulerDataService.loadLessonTime(lessonId);
-		assertNotNull(loadLessonTimeDTO);
-		assertEquals(lessonTimeConvert.getId(), loadLessonTimeDTO.getId());
-		assertEquals(lessonTimeConvert.getLessonNumber(), loadLessonTimeDTO.getLessonNumber());
-		assertEquals(lessonTimeConvert.getTimeStart(), loadLessonTimeDTO.getTimeStart());
-		assertEquals(lessonTimeConvert.getTimeEnd(), loadLessonTimeDTO.getTimeEnd());
+		LessonTimeSummary loadedLessonTimeSummary = (LessonTimeSummary) schedulerDataService.loadLessonTime(LESSON_ID);
+		assertNotNull(loadedLessonTimeSummary);
+		assertNotNull(loadedLessonTimeSummary.getLessonTime());
+		assertEquals(String.valueOf(LESSON_ID), loadedLessonTimeSummary.getLessonTime().getId());
+		assertEquals(LESSON_NUMBER, loadedLessonTimeSummary.getLessonTime().getLessonNumber());
+		assertEquals(TIME_START, loadedLessonTimeSummary.getLessonTime().getTimeStart());
+		assertEquals(TIME_END, loadedLessonTimeSummary.getLessonTime().getTimeEnd());
 	}
 	
 	@Test
 	public void shouldNotLoadLessonTime(){
 		when(persistenceDao.loadLessonsTime(any(Integer.class))).thenReturn(null);
-		LessonTimeDTO loadLessonTimeDTO = schedulerDataService.loadLessonTime(5);
-		assertNull(loadLessonTimeDTO);
+		LessonTimeSummary loadLessonTimeDTO = (LessonTimeSummary) schedulerDataService.loadLessonTime(5);
+		assertNotNull(loadLessonTimeDTO);
+		assertNull(loadLessonTimeDTO.getLessonTime());
+		assertEquals(ErrorData.NO_DATA_WITH_SUCH_ID, loadLessonTimeDTO.getErrorData().getNumberCode());
+		assertEquals(ErrorData.NO_DATA_WITH_SUCH_ID_MESSAGE, loadLessonTimeDTO.getErrorData().getDescription());
 	}
 	
 	@Test
 	public void shouldGetListLessonTime(){
 		List<LessonsTime> listLessonTime = new ArrayList<LessonsTime>();
-		listLessonTime.add(loadLessonsTime());
+		LessonsTime generatedLessonsTime = generateLessonsTime();
+		listLessonTime.add(generatedLessonsTime);
 		
 		when(persistenceDao.getListLessonTime()).thenReturn(listLessonTime);
+		when(lessonsTimeConverter.convertFromPersistence(generatedLessonsTime)).thenReturn(prepareLessonsTimeDTO());
 		LessonsTimeListSummary lessonsTimeSummary = (LessonsTimeListSummary) schedulerDataService.getListLessonTime();
 		List<LessonTimeDTO> listLessonTimeDTO = lessonsTimeSummary.getLessonsTimeList();
 		
 		assertNotNull(listLessonTimeDTO);
-		assertEquals(listLessonTimeDTO.size(), listLessonTime.size());
-		assertEquals(listLessonTimeDTO.get(0).getId().intValue(), listLessonTime.get(0).getId());
-		assertEquals(listLessonTimeDTO.get(0).getLessonNumber(), listLessonTime.get(0).getLessonNumber());
-		assertEquals(listLessonTimeDTO.get(0).getTimeStart(), listLessonTime.get(0).getTimeStart());
-		assertEquals(listLessonTimeDTO.get(0).getTimeEnd(), listLessonTime.get(0).getTimeEnd());
+		assertEquals(1, listLessonTime.size());
+		assertEquals(String.valueOf(LESSON_ID), listLessonTimeDTO.get(0).getId());
+		assertEquals(LESSON_NUMBER, listLessonTimeDTO.get(0).getLessonNumber());
+		assertEquals(TIME_START, listLessonTimeDTO.get(0).getTimeStart());
+		assertEquals(TIME_END, listLessonTimeDTO.get(0).getTimeEnd());
 	}
 	
 	@Test
 	public void shouldNotUpdateLessonTime(){
 		when(persistenceDao.updateLessonsTime(any(LessonsTime.class))).thenReturn(false);
-		when(persistenceDao.loadLessonsTime(any(Integer.class))).thenReturn(loadLessonsTime());
-		LessonTimeDTO result = schedulerDataService.updateLessonTime(prepareLessonsTime());
-		assertNull(result);
+		when(persistenceDao.loadLessonsTime(any(Integer.class))).thenReturn(generateLessonsTime());
+		OperationResultSummary result = (OperationResultSummary) schedulerDataService.updateLessonTime(prepareLessonsTimeDTO());
+		assertNotNull(result);
+		assertEquals(Boolean.FALSE, result.isOperationResult());
 	}
 	
 	
-	private LessonTimeDTO prepareLessonsTime(){
+	private LessonTimeDTO prepareLessonsTimeDTO(){
 		LessonTimeDTO lessonTimeResult = new LessonTimeDTO();
-		lessonTimeResult.setId(5);
-		lessonTimeResult.setLessonNumber(5);
+		lessonTimeResult.setId(String.valueOf(LESSON_ID));
+		lessonTimeResult.setLessonNumber(LESSON_NUMBER);
 		lessonTimeResult.setTimeStart(TIME_START);
 		lessonTimeResult.setTimeEnd(TIME_END);
 		return lessonTimeResult;
 	}
 	
-	private LessonsTime loadLessonsTime(){
+	private LessonsTime generateLessonsTime(){
 		LessonsTime lessonTimeResult = new LessonsTime();
-		lessonTimeResult.setId(5);
-		lessonTimeResult.setLessonNumber(5);
+		lessonTimeResult.setId(LESSON_ID);
+		lessonTimeResult.setLessonNumber(LESSON_NUMBER);
 		lessonTimeResult.setTimeStart(TIME_START);
 		lessonTimeResult.setTimeEnd(TIME_END);
 		return lessonTimeResult;
 	}
-	
-	
 
 }

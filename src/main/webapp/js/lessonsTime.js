@@ -1,6 +1,6 @@
 ﻿;(function($){
 	
-	var GET_ACTIVIST_LIST_URL = "/examScheduler/app/service/secured/classtime/all";
+	var CLASSTIME_URL = "/examScheduler/app/service/secured/classtime";
 	
 	$( document ).ready(function() {
 		initializeTable();
@@ -8,9 +8,8 @@
 	
 	function initializeTable(){
 		$("#lessonsTime").jqGrid({
-			url:GET_ACTIVIST_LIST_URL,
+			url:CLASSTIME_URL+"/all",
 			datatype:'json',
-			mtype:"POST",
 			loadBeforeSend: function(xhr)
 			{
 			   xhr.setRequestHeader("Content-Type", "application/json");
@@ -42,67 +41,16 @@
 				id:"id"
 			}
 		});
-			
+		
 		$("#lessonsTime").jqGrid('navGrid','#lessonsTimePager',
-			{edit:false, add:false, del:false, search:false},
-			{},
-			{},
-			{},
-			{
-				sopt:['eq','ne','lt','gt','cn','bw','ew'],
-				closeOnEscape:true,
-				multipleSearch:true,
-				closeAfterSearch:true
-			}
-		);
-		
-		$("#lessonsTime").navButtonAdd('#lessonsTimePager',
-			{
-				caption:"",
-				buttonicon:"ui-icon-plus",
-				onClickButton: addRow,
-				position:"last",
-				title:"",
-				cursor:"pointer"
-			}
-		);
-		
-		$("#lessonsTime").navButtonAdd('#lessonsTimePager',
-			{
-				caption:"",
-				buttonicon:"ui-icon-pencil",
-				onClickButton:editRow,
-				position:"last",
-				title:"",
-				cursor:"pointer"
-			}
-		);
-		
-		$("#lessonsTime").navButtonAdd('#lessonsTimePager',
-			{
-				caption:"",
-				buttonicon:"ui-icon-trash",
-				onClickButton:deleteRow,
-				position:"last",
-				title:"",
-				cursor:"pointer"
-			}
-		);
-		
+				{edit:true, add:true, del:true, search:false},
+				 //edit options
+			    { url: CLASSTIME_URL+"/edit" },
+			    //add options
+			    { url: CLASSTIME_URL+"/new" },
+			    //delete options
+			    { url: CLASSTIME_URL+"/delete" }
+			);
 	}
 		
-		
-		
-	function addRow(){
-		alert('Add Row');
-	}
-
-	function editRow(){
-		alert('Edit Row');
-	}
-	
-	function deleteRow(){
-		alert('Delete Row');
-	}
-
 })(jQuery);

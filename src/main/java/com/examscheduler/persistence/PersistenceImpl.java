@@ -35,6 +35,7 @@ public class PersistenceImpl implements PersistenceDAO {
 	}
 
 	public boolean createAuditories(Auditory auditorie) {
+
 		currentSession().save(auditorie);
 		return true;
 	}
@@ -50,87 +51,67 @@ public class PersistenceImpl implements PersistenceDAO {
 	}
 
 	public boolean updateAuditories(Auditory auditorie) {
+
 		currentSession().update(auditorie);
 		return true;
 	}
 
 	public Auditory loadAuditorie(Integer auditorieId) {
-		Auditory auditorie = null;
-		try {
-			auditorie = (Auditory) currentSession().load(Auditory.class,
-					auditorieId);
-			Hibernate.initialize(auditorie);
-		} catch (HibernateException e) {
-			logger.error("Error while loading auditorie - " + auditorie, e);
-		}
+		Auditory auditorie = (Auditory) currentSession().load(Auditory.class, auditorieId);
+
 		return auditorie;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Auditory> getListAuditory() {
 		List<Auditory> listAuditorie = null;
+		
 		listAuditorie = currentSession().createCriteria(Auditory.class).list();
 		if (listAuditorie == null)
 			return Collections.EMPTY_LIST;
 		return listAuditorie;
 	}
-
+	
 	public boolean createLessonsTime(LessonsTime lessonsTime) {
-		try {
-			currentSession().save(lessonsTime);
-		} catch (HibernateException e) {
-			logger.error("Error while creating lessonsTime - " + lessonsTime, e);
-			return false;
-		}
+		currentSession().save(lessonsTime);
+
 		return true;
 	}
 
 	public boolean deleteLessonsTime(LessonsTime lessonsTime) {
-		try {
-			currentSession().delete(lessonsTime);
-		} catch (HibernateException e) {
-			logger.error("Exception while deleting LessonsTime - "
-					+ lessonsTime);
-			return false;
-		}
+		
+		currentSession().delete(lessonsTime);
 		return true;
 	}
 
 	public boolean updateLessonsTime(LessonsTime lessonsTime) {
-		try {
-			currentSession().update(lessonsTime);
-		} catch (HibernateException e) {
-			logger.error("Exception while updating LessonsTime - "
-					+ lessonsTime);
-			return false;
-		}
+		
+		currentSession().update(lessonsTime);
+
 		return true;
 	}
 
 	public LessonsTime loadLessonsTime(Integer lessonsTimeId) {
-		LessonsTime lessonsTime = null;
-		try {
-			lessonsTime = (LessonsTime) currentSession().load(
-					LessonsTime.class, lessonsTimeId);
-			Hibernate.initialize(lessonsTime);
-		} catch (HibernateException e) {
-			logger.error("Exception while getting LessonsTime with ID - "
-					+ lessonsTimeId);
-		}
+		
+		LessonsTime lessonsTime = (LessonsTime) currentSession().load(LessonsTime.class, lessonsTimeId);
+		Hibernate.initialize(lessonsTime);
 		return lessonsTime;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<LessonsTime> getListLessonTime() {
 		List<LessonsTime> listLessonTime = null;
-		try {
-			listLessonTime = currentSession().createCriteria(LessonsTime.class)
-					.list();
-		} catch (HibernateException e) {
-			logger.error("Exception while getting List of LessonsTime");
-		}
+		
+		listLessonTime = currentSession().createCriteria(LessonsTime.class).list();
 		if (listLessonTime == null)
 			return Collections.EMPTY_LIST;
 		return listLessonTime;
 	}
+
+
+	public List<Auditory> getAuditory() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

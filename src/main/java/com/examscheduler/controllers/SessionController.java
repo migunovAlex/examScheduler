@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.examscheduler.controllers.tools.CookieHelper;
 import com.examscheduler.security.service.SessionService;
 import com.examscheduler.summary.OperationResultSummary;
 

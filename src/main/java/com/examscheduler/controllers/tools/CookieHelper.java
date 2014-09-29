@@ -1,4 +1,4 @@
-package com.examscheduler.controllers;
+package com.examscheduler.controllers.tools;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

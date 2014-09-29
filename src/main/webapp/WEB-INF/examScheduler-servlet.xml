@@ -44,6 +44,12 @@
     
     <bean id="operationService" class="com.examscheduler.service.SchedulerDataServiceImpl"/>
     
-    <bean id="cookieHelper" class="com.examscheduler.controllers.CookieHelper"/>
+    <bean id="cookieHelper" class="com.examscheduler.controllers.tools.CookieHelper"/>
+    
+    <bean id="lessonsTimeValidator" class="com.examscheduler.controllers.tools.LessonsTimeValidator"/>
+    
+    <bean id="lessonsTimeConverter" class="com.examscheduler.controllers.tools.LessonsTimeConverter"/>
+    
+     <bean id="responseSummaryCreator" class="com.examscheduler.helpers.ResponseSummaryCreator"/>
    
 </beans>    

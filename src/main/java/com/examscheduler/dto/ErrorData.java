@@ -26,6 +26,13 @@ public class ErrorData {
 	public static final int ERROR_WHILE_EXECUTE_OPERATION_CODE = 604;
 	public static final String ERROR_WHILE_EXECUTE_OPERATION_MESSAGE = "Error while execute operation";
 	
+	public static final int NOT_PROPER_DATA = 605;
+	public static final String NOT_PROPER_DATA_MESSAGE = "Data is not proper";
+	
+	public static final int NO_DATA_WITH_SUCH_ID = 606;
+	public static final String NO_DATA_WITH_SUCH_ID_MESSAGE = "There is no data with such ID";
+	
+	
 	public ErrorData(){
 		this.numberCode = OK_CODE;
 		this.description = OK_MESSAGE;

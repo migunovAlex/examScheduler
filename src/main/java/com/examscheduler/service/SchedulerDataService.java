@@ -10,13 +10,13 @@ public interface SchedulerDataService {
 	
 	public AbstractSummary createLessonTime(LessonTimeDTO lessonTimeDTO);
 
-	public LessonTimeDTO updateLessonTime(LessonTimeDTO lessonTimeDTO);
+	public AbstractSummary updateLessonTime(LessonTimeDTO lessonTimeDTO);
 
-	public Boolean deleteLessonTime(Integer lessonTimeId);
+	public AbstractSummary deleteLessonTime(int lessonTimeId);
 
 	public AbstractSummary getListLessonTime();
 
-	public LessonTimeDTO loadLessonTime(Integer lessonTimeId);
+	public AbstractSummary loadLessonTime(int lessonTimeId);
 	
 	public OperationResultSummary createAuditory(AuditoryDTO auditory);
 	

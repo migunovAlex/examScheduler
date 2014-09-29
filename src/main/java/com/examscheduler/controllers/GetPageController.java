@@ -9,6 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.examscheduler.controllers.tools.CookieHelper;
 import com.examscheduler.security.service.UserDetailService;
 
 @Controller

@@ -1,6 +1,8 @@
 package com.examscheduler.controllers;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,15 +14,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.any;
-
+import com.examscheduler.controllers.tools.CookieHelper;
 import com.examscheduler.dto.ErrorData;
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.AbstractSummary;
+import com.examscheduler.dto.summary.LessonTimeSummary;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;
+import com.examscheduler.helpers.ResponseSummaryCreator;
 import com.examscheduler.security.service.UserDetailService;
-import com.examscheduler.service.SchedulerDataService;
+import com.examscheduler.service.SchedulerDataServiceImpl;
 import com.examscheduler.summary.OperationResultSummary;
 
 public class OperationControllerTest {
@@ -34,13 +36,15 @@ public class OperationControllerTest {
 	private LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
 	
 	@Mock
-	private SchedulerDataService schedulerService;
+	private SchedulerDataServiceImpl schedulerService;
 	@Mock
 	private HttpServletRequest request;
 	@Mock
 	private CookieHelper cookieHelper;
 	@Mock
 	private UserDetailService userDetailService;
+	@Mock
+	private ResponseSummaryCreator responseSummaryCreator;
 	
 	@Before
 	public void setUp(){
@@ -51,61 +55,71 @@ public class OperationControllerTest {
 		controller.setUserDetailService(userDetailService);
 		when(cookieHelper.getSessionCookie(request)).thenReturn(FAKE_SESSION);
 		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.TRUE);
+		controller.setResponseSummaryCreator(responseSummaryCreator);
+		when(responseSummaryCreator.generateExpiredSessionMessageResponse()).thenReturn(generateExpiredSessionMessage());
+	}
+
+	private AbstractSummary generateExpiredSessionMessage() {
+		OperationResultSummary result = new OperationResultSummary();
+		result.getErrorData().setNumberCode(ErrorData.EXPIRED_SESSION_CODE);
+		result.getErrorData().setDescription(ErrorData.EXPIRED_SESSION_MESSAGE);
+		return result;
 	}
 
 	@Test
 	public void shouldCreateLessonTime(){
-		OperationResultSummary result = new OperationResultSummary();
-		result.setOperationResult(Boolean.TRUE);
-		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(result);
-		AbstractSummary operationResult = controller.createLessonsTime(request, prepareLessonTime());
-		assertEquals(result, operationResult);
+		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.TRUE));
+		OperationResultSummary operationResult = (OperationResultSummary) controller.createLessonsTime(request, prepareLessonTime());
+		assertEquals(Boolean.TRUE, operationResult.isOperationResult());
 	}
 	
 	@Test
 	public void shouldNotCreateLessonTimeWherUserIsNotLoggedIn(){
 		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
-		OperationResultSummary result = new OperationResultSummary();
-		result.setOperationResult(Boolean.TRUE);
-		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(result);
+		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.FALSE));
 		OperationResultSummary operationResult = (OperationResultSummary) controller.createLessonsTime(request, prepareLessonTime());
 		assertEquals(Boolean.FALSE, operationResult.isOperationResult());
 	}
 	
 	@Test
 	public void shouldNotCreateLessonTime(){
-		OperationResultSummary result = new OperationResultSummary();
-		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(result);
-		AbstractSummary operationResult = schedulerService.createLessonTime(prepareLessonTime());
-		assertEquals(result, operationResult);
+		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.FALSE));
+		OperationResultSummary operationResult = (OperationResultSummary) schedulerService.createLessonTime(prepareLessonTime());
+		assertEquals(Boolean.FALSE, operationResult.isOperationResult());
 	}
 	
 	@Test
 	public void shouldUpdateLessonTime(){
-		when(schedulerService.updateLessonTime(any(LessonTimeDTO.class))).thenReturn(lessonTimeDTO);
-		LessonTimeDTO result = controller.updLessonsTime(prepareLessonTime());
-		assertEquals(result, lessonTimeDTO);
+		when(schedulerService.updateLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.TRUE));
+		OperationResultSummary result = (OperationResultSummary) controller.updLessonsTime(prepareLessonTime());
+		assertEquals(Boolean.TRUE, result.isOperationResult());
+	}
+
+	private OperationResultSummary generateOperationResult(Boolean resultFlag) {
+		OperationResultSummary operationResult = new OperationResultSummary();
+		operationResult.setOperationResult(resultFlag);
+		return operationResult;
 	}
 	
 	@Test
 	public void shouldUpdateLessonTimeFalse(){
-		when(schedulerService.updateLessonTime(any(LessonTimeDTO.class))).thenReturn(lessonTimeDTO);
-		LessonTimeDTO result = controller.updLessonsTime(prepareLessonTime());
-		assertEquals(result, lessonTimeDTO);
+		when(schedulerService.updateLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.TRUE));
+		OperationResultSummary result = (OperationResultSummary) controller.updLessonsTime(prepareLessonTime());
+		assertEquals(Boolean.TRUE, result.isOperationResult());
 	}
 	
 	@Test
 	public void shouldDeleteLessonTime(){
-		when(schedulerService.deleteLessonTime(lessonId)).thenReturn(true);
-		Boolean result = controller.deleteLessonsTime(lessonId);
-		assertEquals(result, true);
+		when(schedulerService.deleteLessonTime(lessonId)).thenReturn(generateOperationResult(Boolean.TRUE));
+		OperationResultSummary result = (OperationResultSummary) controller.deleteLessonsTime(lessonId);
+		assertEquals(Boolean.TRUE, result.isOperationResult());
 	}
 	
 	@Test
 	public void shouldDeleteLessonTimeFalse(){
-		when(schedulerService.deleteLessonTime(lessonId)).thenReturn(false);
-		Boolean result = controller.deleteLessonsTime(lessonId);
-		assertEquals(result, false);
+		when(schedulerService.deleteLessonTime(lessonId)).thenReturn(generateOperationResult(Boolean.FALSE));
+		OperationResultSummary result = (OperationResultSummary) controller.deleteLessonsTime(lessonId);
+		assertEquals(Boolean.FALSE, result.isOperationResult());
 	}
 	
 	@Test
@@ -130,9 +144,11 @@ public class OperationControllerTest {
 	
 	@Test
 	public void shouldGetLessonTime(){
-		when(schedulerService.loadLessonTime(lessonId)).thenReturn(lessonTimeDTO);
-		LessonTimeDTO lessonTimeResult = controller.getLessonTime(lessonId);
-		assertEquals(lessonTimeResult, lessonTimeDTO);
+		LessonTimeSummary result = new LessonTimeSummary();
+		result.setLessonTime(lessonTimeDTO);
+		when(schedulerService.loadLessonTime(lessonId)).thenReturn(result);
+		LessonTimeSummary lessonTimeResult = (LessonTimeSummary) controller.getLessonTime(lessonId);
+		assertEquals(lessonTimeDTO, lessonTimeResult.getLessonTime());
 	}
 	
 	private LessonTimeDTO prepareLessonTime(){
