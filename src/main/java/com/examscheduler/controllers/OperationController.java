@@ -50,7 +50,7 @@ public class OperationController {
 	}
 	
 	@RequestMapping(value="/classtime/get", method=RequestMethod.POST)
-	public @ResponseBody LessonTimeDTO getLessonTime(@RequestBody Integer lessonTimeId){
+	public @ResponseBody AbstractSummary getLessonTime(@RequestBody Integer lessonTimeId){
 		return schedulerDataService.loadLessonTime(lessonTimeId);
 	}
 	

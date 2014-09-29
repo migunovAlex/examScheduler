@@ -16,6 +16,7 @@ import com.examscheduler.dto.ErrorData;
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.AbstractSummary;
 import com.examscheduler.dto.summary.AuditoryListSummary;
+import com.examscheduler.dto.summary.LessonTimeSummary;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.entity.Auditory;
 import com.examscheduler.entity.LessonsTime;
@@ -76,7 +77,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		return result;
 	}
 
-	public AbstractSummary deleteLessonTime(Integer lessonTimeId) {
+	public AbstractSummary deleteLessonTime(int lessonTimeId) {
 		OperationResultSummary result = new OperationResultSummary();
 		boolean deleteLessonsTime = false;
 		try{
@@ -96,7 +97,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		LessonsTimeListSummary result = new LessonsTimeListSummary();
 		List<LessonsTime> listLessonTime = Collections.emptyList();
 		try{
-		listLessonTime = persistenceDao.getListLessonTime();
+			listLessonTime = persistenceDao.getListLessonTime();
 		}catch(HibernateException e){
 			logger.error("error while getting lessonsTime list", e);
 			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
@@ -111,12 +112,24 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		return result;
 	}
 
-	public LessonTimeDTO loadLessonTime(Integer lessonTimeId) {
-		LessonsTime lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
-		if (lessonTime != null) {
-			return lessonsTimeConverter.convertFromPersistence(lessonTime);
+	public AbstractSummary loadLessonTime(int lessonTimeId) {
+		LessonTimeSummary result = new LessonTimeSummary();
+		LessonsTime lessonTime = null;
+		try{
+			lessonTime = persistenceDao.loadLessonsTime(lessonTimeId);
+		}catch(HibernateException e){
+			logger.error("error while deleting lessonsTime - " + lessonTimeId, e);
+			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
+			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
+			return result;
 		}
-		return null;
+		if (lessonTime == null) {
+			result.getErrorData().setNumberCode(ErrorData.NO_DATA_WITH_SUCH_ID);
+			result.getErrorData().setDescription(ErrorData.NO_DATA_WITH_SUCH_ID_MESSAGE);
+			return result;
+		}
+		result.setLessonTime(lessonsTimeConverter.convertFromPersistence(lessonTime));
+		return result;
 	}
 
 	public OperationResultSummary createAuditory(AuditoryDTO auditoryDTO) {
