@@ -110,11 +110,7 @@ public class PersistenceImpl implements PersistenceDAO {
 	@SuppressWarnings("unchecked")
 	public List<LessonsTime> getListLessonTime() {
 		List<LessonsTime> listLessonTime = null;
-		try {
-			listLessonTime = currentSession().createCriteria(LessonsTime.class).list();
-		} catch (HibernateException e) {
-			logger.error("Exception while getting List of LessonsTime");
-		}
+		listLessonTime = currentSession().createCriteria(LessonsTime.class).list();
 		if (listLessonTime == null)
 			return Collections.EMPTY_LIST;
 		return listLessonTime;

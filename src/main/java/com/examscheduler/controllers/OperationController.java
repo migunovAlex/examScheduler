@@ -45,12 +45,12 @@ public class OperationController {
 	}
 	
 	@RequestMapping(value="/classtime/delete", method=RequestMethod.POST)
-	public @ResponseBody AbstractSummary deleteLessonsTime(@ModelAttribute Integer lessonTimeId){
+	public @ResponseBody AbstractSummary deleteLessonsTime(@ModelAttribute(value="id") Integer lessonTimeId){
 		return schedulerDataService.deleteLessonTime(lessonTimeId);
 	}
 	
 	@RequestMapping(value="/classtime/get", method=RequestMethod.POST)
-	public @ResponseBody AbstractSummary getLessonTime(@RequestBody Integer lessonTimeId){
+	public @ResponseBody AbstractSummary getLessonTime(@ModelAttribute(value="id") Integer lessonTimeId){
 		return schedulerDataService.loadLessonTime(lessonTimeId);
 	}
 	

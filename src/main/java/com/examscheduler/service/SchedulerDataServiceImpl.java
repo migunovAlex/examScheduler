@@ -95,7 +95,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 
 	public AbstractSummary getListLessonTime() {
 		LessonsTimeListSummary result = new LessonsTimeListSummary();
-		List<LessonsTime> listLessonTime = Collections.emptyList();
+		List<LessonsTime> listLessonTime = null;
 		try{
 			listLessonTime = persistenceDao.getListLessonTime();
 		}catch(HibernateException e){
@@ -104,6 +104,10 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
 			return result;
 		}
+		
+		if(listLessonTime == null) 
+			listLessonTime = Collections.emptyList();
+		
 		List<LessonTimeDTO> listLessonTimeDTO = new ArrayList<LessonTimeDTO>();
 		for (LessonsTime lessonsTime : listLessonTime) {
 			listLessonTimeDTO.add(lessonsTimeConverter.convertFromPersistence(lessonsTime));
