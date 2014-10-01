@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.examscheduler.security.persistence.UserDao;
 import com.examscheduler.security.persistence.entity.DbUser;
+import com.examscheduler.security.persistence.entity.UserSession;
 
 public class UserDetailServiceTest {
 	
@@ -79,6 +81,38 @@ public class UserDetailServiceTest {
 		assertNotNull(userDetailsBySession);
 	}
 	
+	@Test
+	public void shouldReturnUserIsNotLoggedInWhenNoSessionInDB(){
+		when(userDao.getUserSession(FAKE_SESSION)).thenReturn(null);
+		boolean userStillLoggedIn = testInstance.isUserStillLoggedIn(FAKE_SESSION);
+		assertEquals(Boolean.FALSE, userStillLoggedIn);
+	}
+	
+	@Test
+	public void shouldReturnUserIsNoLoggedInWhenSessionIsNotActive(){
+		UserSession userDetailsWithNotActiveSession = createUserDetails(Boolean.FALSE);
+		when(userDao.getUserSession(FAKE_SESSION)).thenReturn(userDetailsWithNotActiveSession);
+		boolean userStillLoggedIn = testInstance.isUserStillLoggedIn(FAKE_SESSION);
+		assertEquals(Boolean.FALSE, userStillLoggedIn);
+	}
+	
+	@Test
+	public void shouldReturnUserIsLoggedInWhenSessionIsActive(){
+		UserSession userDetailsWithNotActiveSession = createUserDetails(Boolean.TRUE);
+		when(userDao.getUserSession(FAKE_SESSION)).thenReturn(userDetailsWithNotActiveSession);
+		boolean userStillLoggedIn = testInstance.isUserStillLoggedIn(FAKE_SESSION);
+		assertEquals(Boolean.TRUE, userStillLoggedIn);
+	}
+	
+	private UserSession createUserDetails(boolean isActive) {
+		UserSession userSession = new UserSession();
+		userSession.setActive(isActive);
+		userSession.setId(1);
+		userSession.setLastActivity(new DateTime().getMillis());
+		userSession.setSessionValue(FAKE_SESSION);
+		return userSession;
+	}
+
 	private DbUser createUser(int access, String username) {
 		DbUser userToFound = new DbUser();
 		userToFound.setId(1);

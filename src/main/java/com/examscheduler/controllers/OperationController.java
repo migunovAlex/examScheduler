@@ -40,17 +40,26 @@ public class OperationController {
 	}
 	
 	@RequestMapping(value="/classtime/edit", method=RequestMethod.POST)
-	public @ResponseBody AbstractSummary updLessonsTime(@ModelAttribute LessonTimeDTO lessonTime){
+	public @ResponseBody AbstractSummary updLessonsTime(HttpServletRequest request, @ModelAttribute LessonTimeDTO lessonTime){
+		if (!checkUserIsStillLoggedIn(request)){
+			return responseSummaryCreator.generateExpiredSessionMessageResponse();
+		}
 		return schedulerDataService.updateLessonTime(lessonTime);
 	}
 	
 	@RequestMapping(value="/classtime/delete", method=RequestMethod.POST)
-	public @ResponseBody AbstractSummary deleteLessonsTime(@ModelAttribute(value="id") Integer lessonTimeId){
+	public @ResponseBody AbstractSummary deleteLessonsTime(HttpServletRequest request, @ModelAttribute(value="id") Integer lessonTimeId){
+		if (!checkUserIsStillLoggedIn(request)){
+			return responseSummaryCreator.generateExpiredSessionMessageResponse();
+		}
 		return schedulerDataService.deleteLessonTime(lessonTimeId);
 	}
 	
 	@RequestMapping(value="/classtime/get", method=RequestMethod.POST)
-	public @ResponseBody AbstractSummary getLessonTime(@ModelAttribute(value="id") Integer lessonTimeId){
+	public @ResponseBody AbstractSummary getLessonTime(HttpServletRequest request, @ModelAttribute(value="id") Integer lessonTimeId){
+		if (!checkUserIsStillLoggedIn(request)){
+			return responseSummaryCreator.generateExpiredSessionMessageResponse();
+		}
 		return schedulerDataService.loadLessonTime(lessonTimeId);
 	}
 	

@@ -74,7 +74,7 @@ public class OperationControllerTest {
 	}
 	
 	@Test
-	public void shouldNotCreateLessonTimeWherUserIsNotLoggedIn(){
+	public void shouldNotCreateLessonTimeWhileUserIsNotLoggedIn(){
 		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
 		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.FALSE));
 		OperationResultSummary operationResult = (OperationResultSummary) controller.createLessonsTime(request, prepareLessonTime());
@@ -88,13 +88,6 @@ public class OperationControllerTest {
 		assertEquals(Boolean.FALSE, operationResult.isOperationResult());
 	}
 	
-	@Test
-	public void shouldUpdateLessonTime(){
-		when(schedulerService.updateLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.TRUE));
-		OperationResultSummary result = (OperationResultSummary) controller.updLessonsTime(prepareLessonTime());
-		assertEquals(Boolean.TRUE, result.isOperationResult());
-	}
-
 	private OperationResultSummary generateOperationResult(Boolean resultFlag) {
 		OperationResultSummary operationResult = new OperationResultSummary();
 		operationResult.setOperationResult(resultFlag);
@@ -102,23 +95,46 @@ public class OperationControllerTest {
 	}
 	
 	@Test
-	public void shouldUpdateLessonTimeFalse(){
+	public void shouldUpdateLessonTime(){
 		when(schedulerService.updateLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.TRUE));
-		OperationResultSummary result = (OperationResultSummary) controller.updLessonsTime(prepareLessonTime());
+		OperationResultSummary result = (OperationResultSummary) controller.updLessonsTime(request, prepareLessonTime());
 		assertEquals(Boolean.TRUE, result.isOperationResult());
+	}
+	
+	@Test
+	public void shouldNotUpdateLessonTime(){
+		when(schedulerService.updateLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.TRUE));
+		OperationResultSummary result = (OperationResultSummary) controller.updLessonsTime(request, prepareLessonTime());
+		assertEquals(Boolean.TRUE, result.isOperationResult());
+	}
+	
+	@Test
+	public void shouldNotUpdateLessonsTimeWhileUserIsNotLoggedIn(){
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
+		when(schedulerService.updateLessonTime(any(LessonTimeDTO.class))).thenReturn(generateOperationResult(Boolean.TRUE));
+		OperationResultSummary result = (OperationResultSummary) controller.updLessonsTime(request, prepareLessonTime());
+		assertEquals(Boolean.FALSE, result.isOperationResult());
 	}
 	
 	@Test
 	public void shouldDeleteLessonTime(){
 		when(schedulerService.deleteLessonTime(lessonId)).thenReturn(generateOperationResult(Boolean.TRUE));
-		OperationResultSummary result = (OperationResultSummary) controller.deleteLessonsTime(lessonId);
+		OperationResultSummary result = (OperationResultSummary) controller.deleteLessonsTime(request, lessonId);
 		assertEquals(Boolean.TRUE, result.isOperationResult());
 	}
 	
 	@Test
-	public void shouldDeleteLessonTimeFalse(){
+	public void shouldNotDeleteLessonTime(){
 		when(schedulerService.deleteLessonTime(lessonId)).thenReturn(generateOperationResult(Boolean.FALSE));
-		OperationResultSummary result = (OperationResultSummary) controller.deleteLessonsTime(lessonId);
+		OperationResultSummary result = (OperationResultSummary) controller.deleteLessonsTime(request, lessonId);
+		assertEquals(Boolean.FALSE, result.isOperationResult());
+	}
+	
+	@Test
+	public void shouldNotDeleteLessonsTimeWhileUserIsNotLoggedIn(){
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
+		when(schedulerService.deleteLessonTime(lessonId)).thenReturn(generateOperationResult(Boolean.FALSE));
+		OperationResultSummary result = (OperationResultSummary) controller.deleteLessonsTime(request, lessonId);
 		assertEquals(Boolean.FALSE, result.isOperationResult());
 	}
 	
@@ -133,13 +149,13 @@ public class OperationControllerTest {
 		assertEquals(result, listResult);
 	}
 	
-//	@Test
+	@Test
 	public void shouldNotGetLessonTimeListWhenUserIsNotLoggedIn(){
 		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
 		LessonsTimeListSummary result = new LessonsTimeListSummary();
 		when(schedulerService.createLessonTime(any(LessonTimeDTO.class))).thenReturn(result);
-		AbstractSummary listLessonTime = controller.getListLessonTime(request);
-		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE, listLessonTime.getErrorData().getNumberCode());
+		OperationResultSummary listLessonTime = (OperationResultSummary) controller.getListLessonTime(request);
+		assertEquals(Boolean.FALSE, listLessonTime.isOperationResult());
 	}
 	
 	@Test
@@ -147,8 +163,19 @@ public class OperationControllerTest {
 		LessonTimeSummary result = new LessonTimeSummary();
 		result.setLessonTime(lessonTimeDTO);
 		when(schedulerService.loadLessonTime(lessonId)).thenReturn(result);
-		LessonTimeSummary lessonTimeResult = (LessonTimeSummary) controller.getLessonTime(lessonId);
+		LessonTimeSummary lessonTimeResult = (LessonTimeSummary) controller.getLessonTime(request, lessonId);
 		assertEquals(lessonTimeDTO, lessonTimeResult.getLessonTime());
+	}
+	
+	@Test
+	public void shouldNotGetLessonsTimeWhileUserIsNotLoggedIn(){
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
+		LessonTimeSummary result = new LessonTimeSummary();
+		result.setLessonTime(lessonTimeDTO);
+		when(schedulerService.loadLessonTime(lessonId)).thenReturn(result);
+		OperationResultSummary lessonTimeResult = (OperationResultSummary) controller.getLessonTime(request, lessonId);
+		assertEquals(ErrorData.EXPIRED_SESSION_CODE, lessonTimeResult.getErrorData().getNumberCode());
+		assertEquals(ErrorData.EXPIRED_SESSION_MESSAGE, lessonTimeResult.getErrorData().getDescription());
 	}
 	
 	private LessonTimeDTO prepareLessonTime(){

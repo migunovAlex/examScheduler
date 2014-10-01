@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -28,6 +29,7 @@ import com.examscheduler.summary.OperationResultSummary;
 
 public class SchedulerDataServiceImplTest {
 	
+	private static final String EXCEPTION_MESSAGE = "TEST";
 	private static final String TIME_END = "09:30";
 	private static final String TIME_START = "08:00";
 	private static final int LESSON_NUMBER = 5;
@@ -68,6 +70,36 @@ public class SchedulerDataServiceImplTest {
 		result.getErrorData().setDescription(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE);
 		return result;
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void shouldNotCreateLEssonsTimeOnNullMethodParam(){
+		schedulerDataService.createLessonTime(null);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldNotCreateLessonTimeWithNotValidData(){
+		LessonTimeDTO preparedLessonsTime = prepareLessonsTimeDTO();
+		LessonsTime convertedLessonsTime = generateLessonsTime();
+		when(lessonsTimeConverter.convertFromDTO(preparedLessonsTime)).thenReturn(convertedLessonsTime);
+		when(lessonsTimeValidator.isValid(any(LessonsTime.class), any(List.class))).thenReturn(Boolean.FALSE);
+		OperationResultSummary lessonTimeCreate = (OperationResultSummary) schedulerDataService.createLessonTime(preparedLessonsTime);
+		assertEquals(Boolean.FALSE, lessonTimeCreate.isOperationResult());
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldCreateLessonTimeWhenErrorWithDBConnection(){
+		LessonTimeDTO preparedLessonsTime = prepareLessonsTimeDTO();
+		LessonsTime convertedLessonsTime = generateLessonsTime();
+		when(lessonsTimeConverter.convertFromDTO(preparedLessonsTime)).thenReturn(convertedLessonsTime);
+		when(lessonsTimeValidator.isValid(any(LessonsTime.class), any(List.class))).thenReturn(Boolean.TRUE);
+		when(persistenceDao.createLessonsTime(any(LessonsTime.class))).thenThrow(new HibernateException(EXCEPTION_MESSAGE));
+		OperationResultSummary lessonTimeCreate = (OperationResultSummary) schedulerDataService.createLessonTime(preparedLessonsTime);
+		assertEquals(Boolean.FALSE, lessonTimeCreate.isOperationResult());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE, lessonTimeCreate.getErrorData().getNumberCode());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE, lessonTimeCreate.getErrorData().getDescription());
+	}
 
 	@SuppressWarnings("unchecked")
 	@Test
@@ -91,6 +123,19 @@ public class SchedulerDataServiceImplTest {
 		assertNotNull(result);
 		assertEquals(Boolean.FALSE, result.isOperationResult());
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void shouldNotUpdateLessonsTimeWhenErrorWithDBConnection(){
+		when(persistenceDao.updateLessonsTime(any(LessonsTime.class))).thenReturn(true);
+		when(persistenceDao.loadLessonsTime(any(Integer.class))).thenThrow(new HibernateException(EXCEPTION_MESSAGE));
+		when(lessonsTimeValidator.isValid(any(LessonsTime.class), any(List.class))).thenReturn(Boolean.TRUE);
+		OperationResultSummary result = (OperationResultSummary) schedulerDataService.updateLessonTime(prepareLessonsTimeDTO());
+		assertNotNull(result);
+		assertEquals(Boolean.FALSE, result.isOperationResult());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE, result.getErrorData().getNumberCode());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE, result.getErrorData().getDescription());
+	}	
 
 	@SuppressWarnings("unchecked")
 	@Test
@@ -104,11 +149,32 @@ public class SchedulerDataServiceImplTest {
 	}	
 	
 	@Test
+	public void shouldNotDeleteLessonTimeWhenErrorWithDBConnection(){
+		LessonsTime getLessonsTimeById = persistenceDao.loadLessonsTime(LESSON_ID);
+		when(persistenceDao.deleteLessonsTime(getLessonsTimeById)).thenThrow(new HibernateException(EXCEPTION_MESSAGE));
+		OperationResultSummary result = (OperationResultSummary) schedulerDataService.deleteLessonTime(LESSON_ID);
+		assertEquals(Boolean.FALSE, result.isOperationResult());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE, result.getErrorData().getNumberCode());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE, result.getErrorData().getDescription());
+	}
+	
+	@Test
 	public void shouldDeleteLessonTime(){
 		LessonsTime getLessonsTimeById = persistenceDao.loadLessonsTime(LESSON_ID);
 		when(persistenceDao.deleteLessonsTime(getLessonsTimeById)).thenReturn(true);
 		OperationResultSummary result = (OperationResultSummary) schedulerDataService.deleteLessonTime(LESSON_ID);
 		assertEquals(Boolean.TRUE, result.isOperationResult());
+	}
+	
+	@Test 
+	public void shouldNotLoadLessonTimeWhenErrorWithDBConnection(){
+		LessonsTime lessonTime = generateLessonsTime();
+		when(persistenceDao.loadLessonsTime(LESSON_ID)).thenThrow(new HibernateException(EXCEPTION_MESSAGE));
+		when(lessonsTimeConverter.convertFromPersistence(lessonTime)).thenReturn(prepareLessonsTimeDTO());
+		OperationResultSummary result = (OperationResultSummary) schedulerDataService.loadLessonTime(LESSON_ID);
+		assertEquals(Boolean.FALSE, result.isOperationResult());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE, result.getErrorData().getNumberCode());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE, result.getErrorData().getDescription());
 	}
 	
 	@Test 
@@ -153,6 +219,23 @@ public class SchedulerDataServiceImplTest {
 		assertEquals(LESSON_NUMBER, listLessonTimeDTO.get(0).getLessonNumber());
 		assertEquals(TIME_START, listLessonTimeDTO.get(0).getTimeStart());
 		assertEquals(TIME_END, listLessonTimeDTO.get(0).getTimeEnd());
+	}
+	
+	@Test
+	public void shouldNotGetListLessonsTimeWhenErrorWithDBConnection(){
+		when(persistenceDao.getListLessonTime()).thenThrow(new HibernateException(EXCEPTION_MESSAGE));
+		OperationResultSummary result = (OperationResultSummary) schedulerDataService.getListLessonTime();
+		assertEquals(Boolean.FALSE, result.isOperationResult());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE, result.getErrorData().getNumberCode());
+		assertEquals(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_MESSAGE, result.getErrorData().getDescription());
+	}
+	
+	@Test
+	public void shouldGetEmptyListWhenNoDataInDB(){
+		when(persistenceDao.getListLessonTime()).thenReturn(null);
+		LessonsTimeListSummary lessonsTimeSummary = (LessonsTimeListSummary) schedulerDataService.getListLessonTime();
+		assertNotNull(lessonsTimeSummary);
+		assertEquals(0,lessonsTimeSummary.getLessonsTimeList().size());
 	}
 	
 	@Test

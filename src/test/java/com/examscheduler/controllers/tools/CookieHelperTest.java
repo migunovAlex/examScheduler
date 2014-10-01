@@ -45,6 +45,13 @@ public class CookieHelperTest {
 		assertNotNull(sessionCookie);
 		assertEquals(sessionCookie, FAKE_SESSION);
 	}
+	
+	@Test
+	public void shouldReturnNullIfNoCookies(){
+		when(request.getCookies()).thenReturn(null);
+		String sessionCookie = testInstance.getSessionCookie(request);
+		assertNull(sessionCookie);
+	}
 
 	private Cookie[] getCookieList() {
 		Cookie[] cookieArray = new Cookie[2];

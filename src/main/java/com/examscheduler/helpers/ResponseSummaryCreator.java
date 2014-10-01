@@ -22,6 +22,7 @@ public class ResponseSummaryCreator {
 		ErrorData errorData = new ErrorData();
 		errorData.setNumberCode(errorCode);
 		errorData.setDescription(errorMessage);
+		abstractSummary.setErrorData(errorData);
 		return abstractSummary;
 	}
 
