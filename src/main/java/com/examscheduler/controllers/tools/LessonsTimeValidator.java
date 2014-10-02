@@ -34,6 +34,7 @@ public class LessonsTimeValidator {
 		DateTime startTimeToCheck = generateTime(lessonTimeString.getTimeStart());
 		DateTime endTimeToCheck = generateTime(lessonTimeString.getTimeEnd());
 		for (LessonsTime lessonTime : listLessonTime) {
+			if(lessonTimeString.getId() == lessonTime.getId()) continue;
 			Interval interval = getTimePeriodFromLessonTime(lessonTime);
 			if ((lessonTimeString.getLessonNumber() == lessonTime.getLessonNumber())
 					|| interval.contains(startTimeToCheck) || interval.contains(endTimeToCheck))
