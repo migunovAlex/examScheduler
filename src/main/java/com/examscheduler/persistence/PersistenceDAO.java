@@ -7,13 +7,13 @@ import com.examscheduler.entity.LessonsTime;
 
 public interface PersistenceDAO {
 	
-	public boolean createAuditories(Auditory auditorie);
+	public boolean createAuditory(Auditory auditorie);
 	 
-	public boolean deleteAuditories(Auditory auditorie);
+	public boolean deleteAuditory(Auditory auditorie);
 	
-	public boolean updateAuditories(Auditory auditorie);
+	public boolean updateAuditory(Auditory auditorie);
 	
-	public Auditory loadAuditorie(Integer auditorie);
+	public Auditory loadAuditory(Integer auditorie);
 	
 	public boolean createLessonsTime(LessonsTime lessonsTime);
 	
