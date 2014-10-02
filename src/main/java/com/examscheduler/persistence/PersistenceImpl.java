@@ -34,13 +34,13 @@ public class PersistenceImpl implements PersistenceDAO {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public boolean createAuditories(Auditory auditorie) {
+	public boolean createAuditory(Auditory auditorie) {
 
 		currentSession().save(auditorie);
 		return true;
 	}
 
-	public boolean deleteAuditories(Auditory auditorie) {
+	public boolean deleteAuditory(Auditory auditorie) {
 		try {
 			currentSession().delete(auditorie);
 		} catch (HibernateException e) {
@@ -50,13 +50,13 @@ public class PersistenceImpl implements PersistenceDAO {
 		return true;
 	}
 
-	public boolean updateAuditories(Auditory auditorie) {
+	public boolean updateAuditory(Auditory auditorie) {
 
 		currentSession().update(auditorie);
 		return true;
 	}
 
-	public Auditory loadAuditorie(Integer auditorieId) {
+	public Auditory loadAuditory(Integer auditorieId) {
 		Auditory auditorie = (Auditory) currentSession().load(Auditory.class, auditorieId);
 
 		return auditorie;

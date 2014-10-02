@@ -15,9 +15,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.examscheduler.controllers.tools.CookieHelper;
+import com.examscheduler.dto.AuditoryDTO;
 import com.examscheduler.dto.ErrorData;
 import com.examscheduler.dto.LessonTimeDTO;
 import com.examscheduler.dto.summary.AbstractSummary;
+import com.examscheduler.dto.summary.AuditoryListSummary;
 import com.examscheduler.dto.summary.LessonTimeSummary;
 import com.examscheduler.dto.summary.LessonsTimeListSummary;
 import com.examscheduler.helpers.ResponseSummaryCreator;
@@ -31,6 +33,9 @@ public class OperationControllerTest {
 	private static final String TIME_START = "08:00";
 	private static final String FAKE_SESSION = "FAKE_SESSION";
 	private static final Integer lessonId = 10;
+	private static final int AUDITORY_ID = 0;
+	private static final String AUDITORY_NUMBER = null;
+	private static final int AUDITORY_MAXPERSON = 0;
 	
 	private OperationController controller;
 	private LessonTimeDTO lessonTimeDTO = new LessonTimeDTO();
@@ -178,6 +183,100 @@ public class OperationControllerTest {
 		assertEquals(ErrorData.EXPIRED_SESSION_MESSAGE, lessonTimeResult.getErrorData().getDescription());
 	}
 	
+	@Test
+	public void shouldCreateAuditory(){
+		when(schedulerService.createAuditory(any(AuditoryDTO.class))).thenReturn(generateOperationResult(Boolean.TRUE));
+		OperationResultSummary resultCreateAuditory = (OperationResultSummary) controller.createAuditory(request, prepareAuditoryDTO());
+		assertEquals(Boolean.TRUE, resultCreateAuditory.isOperationResult());
+	}
+	
+	@Test
+	public void shouldNotCreateAuditory(){
+		when(schedulerService.createAuditory(any(AuditoryDTO.class))).thenReturn(generateOperationResult(Boolean.FALSE));
+		OperationResultSummary resultCreateAuditory = (OperationResultSummary) controller.createAuditory(request, prepareAuditoryDTO());
+		assertEquals(Boolean.FALSE, resultCreateAuditory.isOperationResult());
+	}
+	
+	@Test
+	public void shouldNotCreateAuditoryWherUserIsNotLoggedIn(){
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
+		when(schedulerService.createAuditory(any(AuditoryDTO.class))).thenReturn(generateOperationResult(Boolean.FALSE));
+		OperationResultSummary operationResult = (OperationResultSummary) controller.createAuditory(request, prepareAuditoryDTO());
+		assertEquals(Boolean.FALSE, operationResult.isOperationResult());
+	}
+	
+	@Test
+	public void shouldUpdateAuditory(){
+		when(schedulerService.updateAuditory(any(AuditoryDTO.class))).thenReturn(generateOperationResult(Boolean.TRUE));
+		OperationResultSummary operationResult = (OperationResultSummary) controller.updateAuditory(request, prepareAuditoryDTO());
+		assertEquals(Boolean.TRUE, operationResult.isOperationResult());
+	}
+	
+	@Test
+	public void shouldNotUpdateAuditory(){
+		when(schedulerService.updateAuditory(any(AuditoryDTO.class))).thenReturn(generateOperationResult(Boolean.FALSE));
+		OperationResultSummary operationResult = (OperationResultSummary) controller.updateAuditory(request, prepareAuditoryDTO());
+		assertEquals(Boolean.FALSE, operationResult.isOperationResult());
+	}
+	
+	@Test
+	public void shouldNotUpdateAuditoryWherUserIsNotLoggedIn(){
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
+		when(schedulerService.updateAuditory(any(AuditoryDTO.class))).thenReturn(generateOperationResult(Boolean.FALSE));
+		OperationResultSummary operationResult = (OperationResultSummary) controller.updateAuditory(request, prepareAuditoryDTO());
+		assertEquals(Boolean.FALSE, operationResult.isOperationResult());
+	}
+	
+	@Test
+	public void shouldDeleteAuditory(){
+		when(schedulerService.deleteAuditory(any(Integer.class))).thenReturn(generateOperationResult(Boolean.TRUE));
+		OperationResultSummary operationResult = (OperationResultSummary) controller.deleteAuditory(request, prepareAuditoryDTO().getId());
+		assertEquals(Boolean.TRUE, operationResult.isOperationResult());		
+	}
+	
+	@Test
+	public void shouldNotDeleteAuditory(){
+		when(schedulerService.deleteAuditory(any(Integer.class))).thenReturn(generateOperationResult(Boolean.FALSE));
+		OperationResultSummary operationResult = (OperationResultSummary) controller.deleteAuditory(request, prepareAuditoryDTO().getId());
+		assertEquals(Boolean.FALSE, operationResult.isOperationResult());		
+	}
+	
+	@Test
+	public void shouldNotDeleteAuditoryWherUserIsNotLoggedIn(){
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
+		when(schedulerService.deleteAuditory(any(Integer.class))).thenReturn(generateOperationResult(Boolean.FALSE));
+		OperationResultSummary operationResult = (OperationResultSummary) controller.deleteAuditory(request, prepareAuditoryDTO().getId());
+		assertEquals(Boolean.FALSE, operationResult.isOperationResult());
+	}
+	
+	@Test
+	public void shouldGetListAuditory(){
+		AuditoryListSummary result = new AuditoryListSummary();
+		List<AuditoryDTO> listAuditory = new ArrayList<AuditoryDTO>();
+		listAuditory.add(prepareAuditoryDTO());
+		result.setAuditoryList(listAuditory);
+		when(schedulerService.getListAuditory()).thenReturn(result);
+		AbstractSummary listResult = controller.getListAuditory(request);
+		assertEquals(result, listResult);
+	}
+	
+	@Test
+	public void shouldNotGetAuditoryListWhenUserIsNotLoggedIn(){
+		when(userDetailService.isUserStillLoggedIn(FAKE_SESSION)).thenReturn(Boolean.FALSE);
+		AuditoryListSummary result = new AuditoryListSummary(); 
+		when(schedulerService.getListAuditory()).thenReturn(result);
+		AbstractSummary listAuditory = controller.getListAuditory(request);
+		assertEquals(ErrorData.EXPIRED_SESSION_CODE, listAuditory.getErrorData().getNumberCode());
+	}
+	
+	private AuditoryDTO prepareAuditoryDTO() {
+		AuditoryDTO auditoryDTO = new AuditoryDTO();
+		auditoryDTO.setId(AUDITORY_ID);
+		auditoryDTO.setAudNumber(AUDITORY_NUMBER);
+		auditoryDTO.setMaxPerson(AUDITORY_MAXPERSON);
+		return auditoryDTO;
+	}
+
 	private LessonTimeDTO prepareLessonTime(){
 		LessonTimeDTO lessonTimeMerge = new LessonTimeDTO();
 		lessonTimeMerge.setLessonNumber(2);

@@ -154,12 +154,10 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 
 		boolean isAuditoryCreated = false;
 		try {
-			isAuditoryCreated = persistenceDao.createAuditories(auditory);
+			isAuditoryCreated = persistenceDao.createAuditory(auditory);
 		} catch (HibernateException e) {
 			logger.error("Error operate with DB", e);
-			result.getErrorData().setNumberCode(ErrorData.ERROR_WHILE_OPERATE_WITH_DB_CODE);
-			result.getErrorData().setDescription(ErrorData.ERROR_WHILE_EXECUTE_OPERATION_MESSAGE);
-			return result;
+			return (OperationResultSummary) responseSummaryCreator.generateErrorConnectionToDataBaseResponse();
 		}
 		result.setOperationResult(isAuditoryCreated);
 		return result;
@@ -172,10 +170,10 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 		
 		OperationResultSummary result = new OperationResultSummary();	
 		try{
-			Auditory auditory = persistenceDao.loadAuditorie(auditoryDTO.getId());
+			Auditory auditory = persistenceDao.loadAuditory(auditoryDTO.getId());
 			auditory.setAudNumber(auditoryDTO.getAudNumber());
 			auditory.setMaxPerson(auditory.getMaxPerson());
-			boolean isAuditoryUpdate = persistenceDao.updateAuditories(auditory);
+			boolean isAuditoryUpdate = persistenceDao.updateAuditory(auditory);
 			result.setOperationResult(isAuditoryUpdate);
 		}catch(HibernateException e){
 			logger.error("Error while updating auditorie - ", e);
@@ -186,7 +184,7 @@ public class SchedulerDataServiceImpl implements SchedulerDataService {
 	public OperationResultSummary deleteAuditory(Integer auditoryId) {
 		if (auditoryId == null)
 			throw new IllegalArgumentException("Auditory Id is null");
-		boolean isAuditoryDelete = persistenceDao.deleteAuditories(persistenceDao.loadAuditorie(auditoryId));
+		boolean isAuditoryDelete = persistenceDao.deleteAuditory(persistenceDao.loadAuditory(auditoryId));
 		OperationResultSummary result = new OperationResultSummary();
 		result.setOperationResult(isAuditoryDelete);
 		return result;

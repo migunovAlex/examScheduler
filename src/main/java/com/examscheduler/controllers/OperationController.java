@@ -80,7 +80,7 @@ public class OperationController {
 	}
 	
 	@RequestMapping(value="/auditory/new", method=RequestMethod.POST)
-	public @ResponseBody AbstractSummary createAuditoriesTimes(HttpServletRequest request, @RequestBody AuditoryDTO auditory){
+	public @ResponseBody AbstractSummary createAuditory(HttpServletRequest request, @RequestBody AuditoryDTO auditory){
 		if(!checkUserIsStillLoggedIn(request)){
 			return responseSummaryCreator.generateExpiredSessionMessageResponse();
 		}
@@ -88,7 +88,7 @@ public class OperationController {
 	}
 	
 	@RequestMapping(value="/auditory/edit", method=RequestMethod.POST)
-	public @ResponseBody AbstractSummary updateAuditoriesTimes(HttpServletRequest request, @RequestBody AuditoryDTO auditoryDTO){
+	public @ResponseBody AbstractSummary updateAuditory(HttpServletRequest request, @RequestBody AuditoryDTO auditoryDTO){
 		if(!checkUserIsStillLoggedIn(request)){
 			return responseSummaryCreator.generateExpiredSessionMessageResponse();
 		}
@@ -104,7 +104,7 @@ public class OperationController {
 	}
 	
 	@RequestMapping(value="/auditory/all", method=RequestMethod.POST)
-	public @ResponseBody AbstractSummary getAuditories(HttpServletRequest request){
+	public @ResponseBody AbstractSummary getListAuditory(HttpServletRequest request){
 		if(!checkUserIsStillLoggedIn(request)){
 			return responseSummaryCreator.generateExpiredSessionMessageResponse();
 		}
