@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.examscheduler.dto.AuditorieDTO;
 import com.examscheduler.dto.LessonTimeDTO;
+import com.examscheduler.entity.Auditorie;
 import com.examscheduler.entity.LessonsTime;
 import com.examscheduler.persistence.PersistenceDAO;
 
@@ -79,6 +81,57 @@ public class SchedulerDataServiceImpl implements SchedulerDataService{
 			lessonTimeDTO.setTimeStart(lessonTime.getTimeStart());
 			lessonTimeDTO.setTimeEnd(lessonTime.getTimeEnd());
 			return lessonTimeDTO;
+		}
+		return null;
+	}
+
+	public boolean createAuditorie(AuditorieDTO auditoryDTO) {
+		Auditorie auditorie = new Auditorie();
+		auditorie.id = auditoryDTO.getId();
+		auditorie.audNumber = auditoryDTO.getNumber();
+		auditorie.maxPerson = auditoryDTO.getMaxPerson();
+		boolean resultCreate = persistenceDao.createAuditories(auditorie);
+		return resultCreate;
+	}
+
+	public AuditorieDTO updateAuditorie(AuditorieDTO auditorieDTO) {
+		Auditorie auditorie = persistenceDao.loadAuditorie(auditorieDTO.getId());
+		auditorie.audNumber = auditorieDTO.getNumber();
+		auditorie.maxPerson = auditorieDTO.getMaxPerson();
+		boolean resultUpdate = persistenceDao.updateAuditories(auditorie);
+		if (resultUpdate) return auditorieDTO;
+		return null;
+	}
+
+	public boolean deleteAuditorie(int auditorieId) {
+		Auditorie auditorie = persistenceDao.loadAuditorie(auditorieId);
+		boolean resultDelete = persistenceDao.deleteAuditories(auditorie);
+		return resultDelete;
+	}
+
+	public List<AuditorieDTO> getAuditorieList() {
+		List<Auditorie> auditorieList = persistenceDao.getAuditorieList();
+		List<AuditorieDTO> auditorieDTOList = new ArrayList<AuditorieDTO>();
+		for(Auditorie auditorie: auditorieList){
+			AuditorieDTO auditorieDTO = new AuditorieDTO();
+			auditorieDTO.setId(auditorie.getId());
+			auditorieDTO.setNumber(auditorie.getAudNumber());
+			auditorieDTO.setMaxPerson(auditorie.getMaxPerson());
+			auditorieDTOList.add(auditorieDTO);
+		}
+		
+		return auditorieDTOList;
+	}
+
+	public AuditorieDTO loadAuditorie(int auditorieId) {
+		Auditorie auditorie = persistenceDao.loadAuditorie(auditorieId);
+		if(auditorie!=null){
+			AuditorieDTO auditorieDTO = new AuditorieDTO();
+			auditorieDTO.setId(auditorieId);
+			auditorieDTO.setNumber(auditorie.getAudNumber());
+			auditorieDTO.setMaxPerson(auditorie.getMaxPerson());
+			return auditorieDTO;
+			
 		}
 		return null;
 	}

@@ -130,5 +130,12 @@ public class PersistenceImpl implements PersistenceDAO {
 		}
 		return listLessonTime;
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Auditorie> getAuditorieList() {
+		List<Auditorie> listAuditorie = null;
+		listAuditorie = currentSession().createCriteria(Auditorie.class).list();
+		return listAuditorie;
+	}
 	
 }

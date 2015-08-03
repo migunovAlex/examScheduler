@@ -5,6 +5,7 @@
 	<a href="/examScheduler/app/pages/secured/lessontime" class="myButton" id="cssmenu1">Время занятий</a>
 	<a href="/examScheduler/app/pages/secured/lessons" class="myButton" id="cssmenu1">Предметы</a>
 	<a href="/examScheduler/app/pages/secured/teacher" class="myButton" id="cssmenu1">Преподаватели</a>
+	<a href="/examScheduler/app/pages/secured/auditories" class="myButton" id="cssmenu1">Аудитории</a>
 </div>
 		
 

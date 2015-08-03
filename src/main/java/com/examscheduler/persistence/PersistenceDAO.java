@@ -15,6 +15,8 @@ public interface PersistenceDAO {
 	
 	public Auditorie loadAuditorie(Integer auditorie);
 	
+	public List<Auditorie> getAuditorieList();
+	
 	public boolean createLessonsTime(LessonsTime lessonsTime);
 	
 	public boolean deleteLessonsTime(LessonsTime lessonsTime);

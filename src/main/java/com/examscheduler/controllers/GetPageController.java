@@ -2,6 +2,7 @@ package com.examscheduler.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,8 @@ public class GetPageController {
 
 	protected static final String USER_SESSION_PARAM = "userSession";
 	
+	private static Logger logger = Logger.getLogger(GetPageController.class);
+	
 	@Autowired
 	private UserDetailService userDetailService;
 	@Autowired
@@ -27,11 +30,15 @@ public class GetPageController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String getLoginPage(){
+		logger.error("Login is OK!");
+		logger.debug("Login is OK!");
 		return "loginPage";
 	}
 	
 	@RequestMapping(value="/mainpage", method=RequestMethod.GET)
 	public String getUnauthorizedMainPage(){
+		logger.error("Entering to main page!");
+		logger.debug("Entering to main page!");
 		return "mainPage";
 	}
 	
@@ -62,6 +69,11 @@ public class GetPageController {
 	@RequestMapping(value="/secured/lessons", method=RequestMethod.GET)
 	public String getLessonsPage(){
 		return "lessonPage";
+	}
+	
+	@RequestMapping(value="/secured/auditories", method=RequestMethod.GET)
+	public String getAuditoryPage(){
+		return "auditories";
 	}
 	
 	public void setUserDetailService(UserDetailService userDetailService) {
