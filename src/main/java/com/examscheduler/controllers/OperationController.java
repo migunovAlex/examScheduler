@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,6 +47,12 @@ public class OperationController {
 	@RequestMapping(value="/classtime/get", method=RequestMethod.POST)
 	public @ResponseBody LessonTimeDTO getLessonTime(@RequestBody Integer lessonTimeId){
 		return schedulerDataService.loadLessonTime(lessonTimeId);
+	}
+	
+	@RequestMapping(value="/auditorie/all", method=RequestMethod.POST)
+	public @ResponseBody String getListAuditories(Model model){
+		model.addAttribute("listAuditories", schedulerDataService.getAuditorieList());
+		return "auditories";
 	}
 
 }
